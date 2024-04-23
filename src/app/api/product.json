@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "product_name": "Blue Denim Shirt",
+        "product_desc": "SHIRT - BLUE",
+        "product_color": "BLUE",
+        "product_size": "M",
+        "product_price": 17.99,
+        "product_image": "https://media.istockphoto.com/photos/blue-jean-shirt-isolated-on-white-background-picture-id584479824?k=6&m=584479824&s=612x612&w=0&h=dwuCX2qaM3DJlwr-4otLwRAkYNAj_AxOyl_0Z0a2b-I=",
+        "product_qty": 1
+    },
+    {
+        "id": 2,
+        "product_name": "Red Hoodie",
+        "product_desc": "HOODIE - RED",
+        "product_color": "RED",
+        "product_size": "M",
+        "product_price": 35.99,
+        "product_image": "https://static.cilory.com/416680-large_default/monte-carlo-cd-maroon-zipper-hoodie.jpg",
+        "product_qty": 1
+    },
+    {
+        "id": 3,
+        "product_name": "Navy T-Shirt",
+        "product_desc": "T-SHIRT - NAVY",
+        "product_color": "NAVY",
+        "product_size": "M",
+        "product_price": 15.99,
+        "product_image": "data:image/jpeg;base64,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",
+        "product_qty": 1
+    },
+    {
+        "id": 4,
+        "product_name": "Black Chino Pants",
+        "product_desc": "CHINO PANTS - BLACK",
+        "product_color": "BLACK",
+        "product_size": "M",
+        "product_price": 65.99,
+        "product_image": "https://the-collective.imgix.net/img/app/product/5/553355-4535587.jpg?w=610&auto=format",
+        "product_qty": 1
+    }
+]
