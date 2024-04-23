@@ -3,12 +3,13 @@
 import React from 'react';
 import { useDispatch } from '../redux/store';
 import { addWishlist } from '@/redux/slices/cartSlice';
+import { Product } from '@/global';
 
-const CardWishlist = ({ wishItem }) => {
+const CardWishlist = (wishItem : Product) => {
 
     const dispatch = useDispatch();
 
-    const add = (productId) => {
+    const add = (productId : number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(addWishlist(productId));
       };
@@ -20,7 +21,7 @@ const CardWishlist = ({ wishItem }) => {
                 <h5 className="card-title">{wishItem.product_name}</h5>
                 <p className="card-text">{wishItem.product_desc}</p>
                 <strong className="text-muted mt-2">${wishItem.product_price}</strong>
-                <button onClick={() => add(wishItem.id)} className="btn btn-primary btn-block mt-3">Add To Cart</button>
+                <button onClick={() => {add(wishItem.id)}} className="btn btn-primary btn-block mt-3">Add To Cart</button>
             </div>
         </div>
     )

@@ -3,11 +3,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import CardWishlist from './CardWishlist';
-import { addToCart } from '../redux/actions/cart';
 import { useSelector } from '../redux/store';
+import { CartState } from '@/global';
 
 const Wishlist = () => {
-    const { cart } = useSelector((state) => state.cart);
+    let cart : CartState;
+    cart = useSelector((state) => state.cart);
 
     return (
         <div className="container mt-5">

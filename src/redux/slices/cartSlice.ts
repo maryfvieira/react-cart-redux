@@ -1,13 +1,20 @@
 import products from '../../app/api/product.json'
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Product, Wishlist, CartItemState, CartState, Stock } from "../../global";
+import { Product, Wishlist, CartItemState, CartState, Stock, CartItem } from "../../global";
 import crypto from 'crypto';
 
 let allProducts: Product[];
 allProducts = products;
 
 const initProducts = [...products]
+
+// products: Product[];
+// wishlist: Wishlist;
+// cartItems: CartItemState[];
+// amount: number;
+// total: number;
+// isLoading: boolean;
 
 const initialState: CartState = {
   products: initProducts,
@@ -17,6 +24,7 @@ const initialState: CartState = {
   total: 0,
   isLoading: true,
 };
+
 
   // Create a Redux slice for managing card data
   const cartSlice = createSlice({
@@ -36,27 +44,23 @@ const initialState: CartState = {
         //remover o produto da lista de desejos
         state.wishlist.products = state.wishlist.products.filter(item => item.id !== action.payload.product.id);
         
-        let cartItem: CartItemState;
-        cartItem = {} as CartItemState;
-
         let amount = state.amount;
         let total = state.total;
+
+        let cartItem: CartItemState | undefined;
         cartItem = state.cartItems.find(
           item => item.product.id === action.payload.product.id
         );
         if (cartItem === undefined) {
           
-          let product = state.products.filter(item => item.id === action.payload.product.id);
-
-          cartItem = {} as CartItemState;
-          cartItem.id = crypto.randomUUID();
-          cartItem.product.id = action.payload.product.id;
-          cartItem.product.product_price = action.payload.product.product_price;
-          cartItem.product.product_name = action.payload.product.product_name;
-          cartItem.product.product_image = action.payload.product.product_image;
-          cartItem.product.product_desc = action.payload.product.product_desc;
-          cartItem.product.product_color = action.payload.product.product_color;
-          cartItem.product.product_size = action.payload.product.product_size;
+          cartItem = action.payload;
+          // cartItem.product.id = action.payload.product.id;
+          // cartItem.product.product_price = action.payload.product.product_price;
+          // cartItem.product.product_name = action.payload.product.product_name;
+          // cartItem.product.product_image = action.payload.product.product_image;
+          // cartItem.product.product_desc = action.payload.product.product_desc;
+          // cartItem.product.product_color = action.payload.product.product_color;
+          // cartItem.product.product_size = action.payload.product.product_size;
         } else {
           amount = amount - cartItem.cartItemAmount;
           total = total - cartItem.cartItemTotal;

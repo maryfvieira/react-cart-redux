@@ -16,9 +16,12 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import CartItem from "./CartItem";
 import { useSelector, useDispatch } from "../redux/store";
+import { CartState } from '@/global';
 
 const Cart = () => {
-  const { cart } = useSelector((state) => state.cart);
+  let cart : CartState;
+  cart = useSelector((state) => state.cart);
+  
   return (
     <div className="row mt-5">
       <div className="col-lg-8 col-md-12">

@@ -6,6 +6,7 @@ export interface Product {
     product_size: string;
     product_price: number;
     product_image: string;
+    product_qty: number;
   }
   
   export interface Stock {
@@ -18,7 +19,7 @@ export interface Product {
   }
   
   export interface CartItemState {
-    id: string;
+    id: string | undefined | null;
     product:  Product;
     cartItemAmount: number;
     cartItemTotal: number;

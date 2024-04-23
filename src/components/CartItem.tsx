@@ -5,23 +5,26 @@ import Button from '@mui/material/Button';
 import {Delete, Favorite} from '@mui/icons-material';
 import { useSelector, useDispatch } from '../redux/store';
 import { addItemQty, addWishlist, removeItemQty, removeFromCart } from '@/redux/slices/cartSlice';
+import { Product, CartItemState } from '@/global';
 
-const CartItem = ({ cartItem }) => {
+type Props = { cartItem: CartItemState;};
+
+const CartItem = ({ cartItem }: Props) => {
     const dispatch = useDispatch();
 
-    const incrementWishList = (productId) => {
+    const incrementWishList = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(addWishlist(productId));
       };
-      const remove = (productId) => {
+      const remove = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(removeFromCart(productId));
       };
-      const removeItem = (productId) => {
+      const removeItem = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(removeItemQty(productId));
       };
-      const addItem = (productId) => {
+      const addItem = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(addItemQty(productId));
       };
