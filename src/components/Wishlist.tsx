@@ -16,11 +16,15 @@ const Wishlist = () => {
             <p className="text-muted">All Your Favorite Products</p>
             <div className="row mt-3">
                 {
-                    cart.wishlist.products.length > 0 ? cart.wishlist.products.map(item => (
-                        <div className="col-md-3">
-                            <CardWishlist wishItem={item} />
-                        </div>
-                    )) : <p className="text-center mx-auto">Your wishlist is empty</p>
+                    (cart.wishlist.products != null && cart.wishlist.products.length > 0) ? cart.wishlist.products.map(item =>
+                     { 
+                        console.log(item.product_name);
+                        return (                      
+                            <div className="col-md-3" key={Math.random()}>
+                                <CardWishlist wishItem={item} />
+                            </div>
+                        );
+                    }) : <p className="text-center mx-auto">Your wishlist is empty</p>
                 }
             </div>
         </div>

@@ -5,16 +5,23 @@ import Button from '@mui/material/Button';
 import {Delete, Favorite} from '@mui/icons-material';
 import { useSelector, useDispatch } from '../redux/store';
 import { addItemQty, addWishlist, removeItemQty, removeFromCart } from '@/redux/slices/cartSlice';
-import { Product, CartItemState } from '@/global';
+import { Product, CartItemState, CartState } from '@/global';
 
 type Props = { cartItem: CartItemState;};
 
 const CartItem = ({ cartItem }: Props) => {
+
+    let cart : CartState;
+    cart = useSelector((state) => state.cart);
+
+    let cartItemAmount = cart.cartItems.find(item=> item.product.id == cartItem.product.id)?.cartItemAmount;
+
     const dispatch = useDispatch();
 
     const incrementWishList = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(addWishlist(productId));
+        dispatch(removeFromCart(productId));
       };
       const remove = (productId: number) => {
         // Dispatch the 'getResources' action to fetch data
@@ -66,9 +73,9 @@ const CartItem = ({ cartItem }: Props) => {
                 <div className="col-md-3">
                     <div className="input-group mt-3 mb-5">
                         <div className="input-group-prepend">
-                            <button className="btn btn-outline-secondary font-weight-bold" disabled={cartItem.product.product_qty === 1} onClick={() => removeItem(cartItem.product.id)}> -- </button>
+                            <button className="btn btn-outline-secondary font-weight-bold" disabled={cartItemAmount === 1} onClick={() => removeItem(cartItem.product.id)}> -- </button>
                         </div>
-                        <input type="text" readOnly className="form-control text-center" value={cartItem.product.product_qty} aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                        <input type="text" readOnly className="form-control text-center" value={cartItemAmount} aria-label="Example text with button addon" aria-describedby="button-addon1" />
                         <div className="input-group-append">
                             <button className="btn btn-outline-secondary font-weight-bold" onClick={() => addItem(cartItem.product.id)}>+</button>
                         </div>

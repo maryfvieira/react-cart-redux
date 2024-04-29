@@ -29,7 +29,7 @@ const Cart = () => {
           <h4>Cart ( {cart.cartItems.length} Items)</h4>
           <hr className="my-3" />
           {cart.cartItems.map((cartItem) => (
-            <CartItem cartItem={cartItem} />
+            <CartItem cartItem={cartItem} key={Math.random()}/>
           ))}
         </div>
       </div>
@@ -39,7 +39,7 @@ const Cart = () => {
           <hr className="my-3" />
           <div className="d-flex justify-content-between">
             <p className="text-muted">Temporary Amount</p>
-            <p className="text-muted">${cart.amount.toFixed(2)}</p>
+            <p className="text-muted">{cart.amount}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p className="text-muted">Shipping</p>

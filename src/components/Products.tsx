@@ -17,7 +17,7 @@ const Products = () => {
             <div className="row mt-3">
                 {
                     cart2.products.length > 0 ? cart2.products.map(product => (
-                        <div className="col-md-3">
+                        <div className="col-md-3" key={product.id}>
                             <CardProduct product={product}/>
                         </div>
                     )) : <p className="text-center mx-auto">No Product Available</p>

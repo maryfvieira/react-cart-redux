@@ -7,19 +7,19 @@ import crypto from 'crypto';
 let allProducts: Product[];
 allProducts = products;
 
-const initProducts = [...products]
+let cartItems: CartItemState[];
+cartItems = [];
 
-// products: Product[];
-// wishlist: Wishlist;
-// cartItems: CartItemState[];
-// amount: number;
-// total: number;
-// isLoading: boolean;
+const emptyWishlist = (): Wishlist => ({
+  products: []
+});
+
+const initProducts = [...products]
 
 const initialState: CartState = {
   products: initProducts,
-  wishlist: {} as Wishlist,
-  cartItems: [],
+  wishlist: { products:[] } as Wishlist,
+  cartItems: cartItems,
   amount: 0,
   total: 0,
   isLoading: true,
@@ -80,10 +80,9 @@ const initialState: CartState = {
       },
       addWishlist: (state, action) => {
         const productId = action.payload;
-        if(state.wishlist.products.find(item => item.id == productId) == undefined){
-          let filProduct = allProducts.find(item => item.id === productId);
-          if(filProduct != undefined)
-            state.wishlist.products.push(filProduct)
+        let cartItem = state.cartItems.find(item => item.product.id == productId);
+        if(cartItem !== undefined){
+          state.wishlist.products.push(cartItem.product);
         }
       },
       removeFromCart: (state, action) => {
@@ -100,8 +99,8 @@ const initialState: CartState = {
             item => item.product.id !== productId
           );
   
-          state.total = state.amount - cartItemToRemove.cartItemTotal;
-          state.amount -= cartItemToRemove?.cartItemAmount;
+          state.total = state.total - cartItemToRemove.cartItemTotal;
+          state.amount -= cartItemToRemove.cartItemAmount;
 
           let filProduct = cartItemToRemove.product;
           state.products.push(filProduct);
@@ -136,7 +135,7 @@ const initialState: CartState = {
   
           cartItem.cartItemAmount -= 1;
           cartItem.cartItemTotal =
-            cartItem.cartItemAmount * action.payload.productPrice;
+            cartItem.cartItemAmount * cartItem.product.product_price;
           total += cartItem.cartItemTotal;
   
           state.cartItems = state.cartItems.filter(
