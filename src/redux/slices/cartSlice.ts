@@ -86,6 +86,7 @@ const initialState: CartState = {
         }
       },
       removeFromCart: (state, action) => {
+        console.log("entrou");
         const productId = action.payload;
 
         //state.wishlist.products = state.wishlist.products.filter(item => item.id !== productId);
