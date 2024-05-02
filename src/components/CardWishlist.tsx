@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useDispatch, useSelector } from "../redux/store";
+import { useDispatch, useSelector } from "@redux/store";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { Product, CartItemState, CartState } from "@/global";
 

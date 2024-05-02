@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react'
-import CardProduct from './CardProduct';
-import { useSelector } from '../redux/store';
+import CardProduct from '@components/CardProduct';
+import { useSelector } from '@redux/store';
 import { CartState } from '@/global';
 
 const Products = () => {

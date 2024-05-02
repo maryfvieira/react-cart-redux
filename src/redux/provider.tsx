@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { makeStore, AppStore } from "./store";
 import {PersistGate} from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import Loading from "../components/Loading";
+import Loading from "@components/Loading";
 
 export function Providers({ children }: { children: React.ReactNode }) {
 

@@ -2,8 +2,8 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import CardWishlist from './CardWishlist';
-import { useSelector } from '../redux/store';
+import CardWishlist from '@components/CardWishlist';
+import { useSelector } from '@redux/store';
 import { CartState } from '@/global';
 
 const Wishlist = () => {

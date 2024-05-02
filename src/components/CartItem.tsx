@@ -3,7 +3,7 @@
 import React from 'react'
 import Button from '@mui/material/Button';
 import {Delete, Favorite} from '@mui/icons-material';
-import { useSelector, useDispatch } from '../redux/store';
+import { useSelector, useDispatch } from '@redux/store';
 import { addItemQty, addWishlist, removeItemQty, removeFromCart } from '@/redux/slices/cartSlice';
 import { Product, CartItemState, CartState } from '@/global';
 

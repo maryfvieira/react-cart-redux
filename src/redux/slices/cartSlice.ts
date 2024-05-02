@@ -1,7 +1,7 @@
 import products from '../../app/api/product.json'
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Product, Wishlist, CartItemState, CartState, Stock, CartItem } from "../../global";
+import { Product, Wishlist, CartItemState, CartState, Stock } from "@/global";
 import crypto from 'crypto';
 
 let allProducts: Product[];
