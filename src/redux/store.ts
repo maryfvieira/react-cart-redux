@@ -10,14 +10,10 @@ import storage from "./storage";
 
 // ----------------------------------------------------------------------
 
-// Define the root state type using the ReturnType utility of TypeScript
-//export type RootState = ReturnType<typeof rootReducer>;
-
 
 const persistConfig = {
   key: "root",
   storage,
-  // blacklist: ["tracking"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -33,16 +29,7 @@ export const makeStore = () => {
   });
 };
 
-// const store = configureStore({
-//   reducer: persistedReducer,
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware({
-//       serializableCheck: false,
-//       immutableCheck: false,
-//     }),
-// });
 
-// Extract the dispatch function from the store for convenience
 const { dispatch } = makeStore();
 
 export type AppStore = ReturnType<typeof makeStore>;
@@ -54,9 +41,4 @@ const useSelector: TypedUseSelectorHook<RootState> = useAppSelector;
 // Create a custom useDispatch hook with typed dispatch
 const useDispatch = () => useAppDispatch<AppDispatch>();
 
-// export type AppStore = ReturnType<typeof makeStore>;
-// export type RootState = ReturnType<AppStore["getState"]>;
-// export type AppDispatch = AppStore["dispatch"];
-
-// Export the Redux store, dispatch, useSelector, and useDispatch for use in components
 export { dispatch, useSelector, useDispatch };

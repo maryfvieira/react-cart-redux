@@ -5,7 +5,6 @@ import { Card, CardContent, Typography, Link, Button } from '@mui/material';
 import Image from "next/image";
 // Import Redux-related functions and actions
 import { useSelector, useDispatch } from '../redux/store';
-import { getResources } from '@/redux/slices/mainSlice';
 import Navbar from "../components/Navbar";
 import Cart from "../components/Cart"
 import Products from "../components/Products";
