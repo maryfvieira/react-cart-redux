@@ -11,6 +11,8 @@ import Products from "../components/Products";
 import Wishlist from "../components/Wishlist";
 import Footer from "../components/Footer";
 import '../app/index.css'
+import container from '@/di/ioc.config';
+
 
 // Define the Home component
 const Home: React.FC = () => {
@@ -20,7 +22,7 @@ const Home: React.FC = () => {
     <main>
       <Navbar /> 
       <div className="container">
-        <Products />
+        <Products container={container}/>
         <Wishlist />
         <Cart />
       </div>

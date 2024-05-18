@@ -12,14 +12,3 @@ describe('Home', () => {
       expect(footerDiv).toBeInTheDocument()
     })
   })
-
-// test("renders the footer in page component", ( )=>{
-// const { getByText } = render(<Home/>);
-// expect(getByText("I am Child1")).toBeInTheDocument();
-
-// })
-
-// test("renders the footer in page component", () => {
-//     render(<Page />);
-//     const image = screen.getByAltText("logo");
-//   })
