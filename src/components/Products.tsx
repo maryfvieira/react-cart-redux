@@ -6,7 +6,7 @@ import CardProduct from '@components/CardProduct';
 import { useSelector } from '@redux/store';
 import { CartState } from '@/global';
 import { useRef, useEffect } from 'react';
-import { ProductsApi } from '@/app/api/client/product/productsApi';
+import { ProductsApi } from '@/app/api/product/productsApi';
 
 
 import { Headers } from '@/app/api/client/axios/headers';

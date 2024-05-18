@@ -1,11 +1,11 @@
-import { Headers } from '../axios/headers';
-import { FetchHttpClient } from '../fetch/fetchHttpClient';
-import type ApiClient from '../axios/apiClient';
+import { Headers } from '../client/axios/headers';
+import { FetchHttpClient } from '../client/fetch/fetchHttpClient';
+import type ApiClient from '../client/axios/apiClient';
 import appConfig from '@config/appConfig';
 import { Product } from "@/global";
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import TYPES from '../axios/types';
+import TYPES from '../client/axios/types';
 
 @injectable()
 export class ProductsApi {

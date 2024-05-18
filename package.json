@@ -31,12 +31,14 @@
     "react-redux": "^9.1.1",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@next/env": "^14.2.3",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
