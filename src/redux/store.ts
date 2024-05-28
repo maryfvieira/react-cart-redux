@@ -4,9 +4,9 @@ import {
   useDispatch as useAppDispatch,
   useSelector as useAppSelector,
 } from 'react-redux';
-import rootReducer from './rootReducer';
+import rootReducer from '@redux/rootReducer';
 import { persistReducer } from "redux-persist";
-import storage from "./storage";
+import storage from "@redux/storage";
 
 // ----------------------------------------------------------------------
 

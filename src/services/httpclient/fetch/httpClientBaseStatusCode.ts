@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "../httpStatusCode"
+import { HttpStatusCode } from "@/services/httpclient/httpStatusCode"
 
 export interface HttpClientBaseStatusCode {
     statusCode: number

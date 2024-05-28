@@ -1,25 +1,18 @@
 'use client';
 
 import React, { Component, useState } from 'react'
-import ReactDOM from 'react-dom';
+
 import CardProduct from '@components/CardProduct';
-import { useSelector } from '@redux/store';
-import { CartState } from '@/global';
+
 import { useRef, useEffect } from 'react';
-import { ProductsApi } from '@/app/api/product/productsApi';
-import { Headers } from '@/app/api/client/axios/headers';
+import { ProductsApi } from '@/services/product/productsApi';
+import { Headers } from '@/services/httpclient/axios/headers';
 import { Product } from '@/global';
 import Loading from "@components/Loading";
 import 'reflect-metadata';
-import ApiClient from '@/app/api/client/axios/apiClient';
-import TYPES from '@/app/api/client/axios/types';
+import ApiClient from '@/services/httpclient/axios/apiClient';
+import TYPES from '@/services/httpclient/axios/types';
 import { Container } from 'inversify';
-
-function getBaseHeaders(): Headers {
-    let headers = new Headers();
-    headers.addItem("Content-Type", "application/json");
-    return headers;
-}
 
 function getProductApi(container: Container): ProductsApi {
     const apiClient = container.get<ApiClient>(TYPES.ApiClient);
@@ -38,9 +31,9 @@ const Products = ({ container }: Props) => {
             // try{
             //const productManager = await createProductManager();
 
-            const products = await getProductApi(container).getAll(getBaseHeaders(), "Products");
+            const products = await getProductApi(container).getAll();
             console.log("products " + products)
-            setData(products);
+            setData(products.data);
 
             // }catch (error: any){
             //     console.log(error);

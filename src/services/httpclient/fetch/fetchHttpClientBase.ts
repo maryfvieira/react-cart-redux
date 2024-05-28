@@ -1,7 +1,7 @@
-import { HttpClientBaseHeader } from "./httpClientBaseHeader";
-import { HttpClientBaseMehod } from "./httpClientBaseMehod";
-import { HttpClientBaseStatusCode } from "./httpClientBaseStatusCode";
-import { HttpStatusCode } from "../httpStatusCode";
+import { HttpClientBaseHeader } from "@/services/httpclient/fetch/httpClientBaseHeader";
+import { HttpClientBaseMehod } from "@/services/httpclient/fetch/httpClientBaseMehod";
+import { HttpClientBaseStatusCode } from "@/services/httpclient/fetch/httpClientBaseStatusCode";
+import { HttpStatusCode } from "@/services/httpclient/httpStatusCode";
 
 export class FetchHttpClientBase {
     private resp!: Response;

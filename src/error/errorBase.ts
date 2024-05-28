@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "../app/api/client/httpStatusCode";
+import { HttpStatusCode } from "@/services/httpclient/httpStatusCode";
 export class ErrorBase<T extends number> extends Error {
     _name: string;
     _message?: string;

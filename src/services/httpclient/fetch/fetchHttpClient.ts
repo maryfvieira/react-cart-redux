@@ -1,6 +1,6 @@
-import { FetchHttpClientBase } from "./fetchHttpClientBase";
-import { HttpClientBaseHeader } from "./httpClientBaseHeader";
-import { HttpClientBaseMehod } from "./httpClientBaseMehod";
+import { FetchHttpClientBase } from "@/services/httpclient/fetch/fetchHttpClientBase";
+import { HttpClientBaseHeader } from "@/services/httpclient/fetch/httpClientBaseHeader";
+import { HttpClientBaseMehod } from "@/services/httpclient/fetch/httpClientBaseMehod";
 
   export interface HttpClientResponse<T> {
     data: T;

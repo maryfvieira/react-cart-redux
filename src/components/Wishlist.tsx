@@ -1,7 +1,6 @@
 'use client';
 
-import React, { Component } from 'react'
-import { connect } from 'react-redux';
+import React from 'react'
 import CardWishlist from '@components/CardWishlist';
 import { useSelector } from '@redux/store';
 import { CartState } from '@/global';

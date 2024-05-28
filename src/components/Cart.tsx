@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Component } from "react";
+import React from "react";
 //import Accordion from '@material-ui/core/Accordion';
 import {
   Accordion,
@@ -8,10 +8,7 @@ import {
   AccordionDetails,
   Typography,
 } from "@mui/material";
-//import AccordionSummary from '@material-ui/core/AccordionSummary';
-//import AccordionDetails from '@material-ui/core/AccordionDetails';
-//import Typography from '@material-ui/core/Typography';
-//import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 import { ExpandMore } from "@mui/icons-material";
 import CartItem from "./CartItem";
