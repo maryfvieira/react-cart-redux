@@ -1,8 +1,8 @@
 
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import { Headers } from "@/app/api/client/axios/headers";
-import  ApiClient from "@/app/api/client/axios/apiClient";
+import { Headers } from "@/services/httpclient/axios/headers";
+import  ApiClient from "@/services/httpclient/axios/apiClient";
 import products from '@/app/api/product.json';
 
 @injectable()

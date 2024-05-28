@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
-import TYPES from '@/app/api/client/axios/types';
-import apiClient  from '../app/api/client/axios/apiClient';
+import TYPES from '@/services/httpclient/axios/types';
+import apiClient  from '@/services/httpclient/axios/apiClient';
 import ApiClientMock from './apiClientMock';
 
 const container = new Container();
