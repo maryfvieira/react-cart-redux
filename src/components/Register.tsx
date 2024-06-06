@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import useRecaptcha from "@/utils/useRecaptcha";
+import useRecaptcha from "@/hooks/useRecaptcha";
 
 import 'reflect-metadata';
 import ApiClient from '@/services/httpclient/axios/apiClient';
 import TYPES from '@/services/httpclient/axios/types';
 import { Container } from 'inversify';
-import { UserApi } from '@/services/user/userApi';
+import { UserService } from '@/services/userService';
 
-function getLoginApi(container: Container): UserApi {
+function getLoginApi(container: Container): UserService {
   const apiClient = container.get<ApiClient>(TYPES.ApiClient);
-  return new UserApi(apiClient);
+  return new UserService(apiClient);
 }
 
 type Props = { container: Container};

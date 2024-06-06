@@ -5,7 +5,7 @@ import React, { Component, useState } from 'react'
 import CardProduct from '@components/CardProduct';
 
 import { useRef, useEffect } from 'react';
-import { ProductsApi } from '@/services/product/productsApi';
+import { ProductService } from '@/services/productService';
 import { Headers } from '@/services/httpclient/axios/headers';
 import { Product } from '@/global';
 import Loading from "@components/Loading";
@@ -14,9 +14,9 @@ import ApiClient from '@/services/httpclient/axios/apiClient';
 import TYPES from '@/services/httpclient/axios/types';
 import { Container } from 'inversify';
 
-function getProductApi(container: Container): ProductsApi {
+function getProductApi(container: Container): ProductService {
     const apiClient = container.get<ApiClient>(TYPES.ApiClient);
-    return new ProductsApi(apiClient);
+    return new ProductService(apiClient);
 }
 
 type Props = { container: Container};

@@ -15,4 +15,10 @@ export default {
     get SecretKeyToCaptcha(): string {
         return process.env.SECRET_KEY || "";
     },
+    get apiUrl(): string {
+        return process.env.API_URL || "";
+    },
+    get googleRecapchaVerifyUrl(): string {
+        return process.env.GOOGLE_RECAPCHA_VERIFY_URL || "";
+    },
 }

@@ -33,3 +33,19 @@ export interface Product {
     total: number;
     isLoading: boolean;
   }
+  export interface GoogleResponse {
+    success: boolean,
+    'error-codes': any[]
+    statusResponse: number;
+}
+export interface AuthPayload {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phone: string;
+	role: string;
+	iat: number;
+	exp: number;
+	openIdSub?: string;
+}

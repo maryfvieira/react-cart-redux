@@ -2,8 +2,14 @@
   "compilerOptions": {
     "target": "es5",
     "baseUrl": ".",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["reflect-metadata"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "reflect-metadata"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -23,14 +29,36 @@
       }
     ],
     "paths": {
-      "@components/*": ["./src/components/*"],
-      "@error/*": ["./src/error/*"],
-      "@config/*": ["./src/config/*"],
-      "@redux/*": ["./src/redux/*"],
-      "@api/*":["./src/api/*"],
-      "@/*": ["./src/*"]
-    }
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@error/*": [
+        "./src/error/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
+      ],
+      "@redux/*": [
+        "./src/redux/*"
+      ],
+      "@api/*": [
+        "src/pages/api/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.mjs", "jest.config.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next.config.mjs",
+    "jest.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

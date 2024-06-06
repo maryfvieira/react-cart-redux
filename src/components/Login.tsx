@@ -1,16 +1,22 @@
+"use client";
 import React, { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import useRecaptcha from "@/utils/useRecaptcha";
+import useRecaptcha from "@/hooks/useRecaptcha";
 
 import "reflect-metadata";
-import ApiClient from '@/services/httpclient/axios/apiClient';
-import TYPES from '@/services/httpclient/axios/types';
+import ApiClient from "@/services/httpclient/axios/apiClient";
+import TYPES from "@/services/httpclient/axios/types";
 import { Container } from "inversify";
-import { UserApi } from "@/services/user/userApi";
+import { UserService } from "@/services/userService";
+import Alert from "@mui/material/Alert";
+import ErrorIcon from "@mui/icons-material/Error";
+import { AlertTitle } from "@mui/material";
+import Fade from "@mui/material/Fade";
+import Box from "@mui/material/Box";
 
-function getLoginApi(container: Container): UserApi {
+function getLoginApi(container: Container): UserService {
   const apiClient = container.get<ApiClient>(TYPES.ApiClient);
-  return new UserApi(apiClient);
+  return new UserService(apiClient);
 }
 
 type Props = { container: Container };
@@ -21,6 +27,23 @@ const Login = ({ container }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [status, setStatus] = React.useState("error");
+  const [alertMsg, setAlertMsg] = useState("Login realizado com sucesso");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertVisibility, setAlertVisibility] = useState(false);
+
+  const handleChange = (status) => {
+    setStatus(status);
+    setShowAlert(true);
+  };
+
+  const alert = (
+    <Alert severity={status} variant="standard" className="alert">
+      <AlertTitle>{status== "error"? "Erro":"Sucesso"}</AlertTitle>
+      {alertMsg}
+    </Alert>
+  );
+
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
     if (capchaToken && username && password) {
@@ -30,37 +53,52 @@ const Login = ({ container }: Props) => {
         capchaToken
       );
 
-      if (result.data.success === false) {
-        alert(result.data.error.message);
+      recaptchaRef.current?.reset();
+
+      console.log("erro=>" + JSON.stringify(result));
+      if (result.data.error != null) {
+        console.log("erro" + result.error);
+       
+        if (result.data.error._message) 
+          setAlertMsg(result.data.error._message);
+        else 
+          setAlertMsg("Ocorreu um erro inesperado");
+
+        handleChange("error");
+
         handleRecaptcha("");
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
+        // if (recaptchaRef.current) {
+        //   recaptchaRef.current.reset();
+        // }
         return;
+      } else {
+        handleChange("success");
+        setAlertMsg("");
       }
 
       // Reset captcha after submission
-      recaptchaRef.current?.reset();
+      //recaptchaRef.current?.reset();
 
       // If the login is successful, perform post-login logic
-      if (result.data.success) {
-        // Example post-login logic:
-        // - Store user token or session data
-        // - Redirect to a protected page
-        // - Update user state in the application
-        console.log("Login successful");
-        // ...
-      } else {
-        // If the login fails, display an error message to the user
-        alert("Login failed. Please check your credentials and try again.");
-      }
+      // if (result.data.data.success) {
+      //   // Example post-login logic:
+      //   // - Store user token or session data
+      //   // - Redirect to a protected page
+      //   // - Update user state in the application
+      //   console.log("Login successful");
+      //   // ...
+      // } else {
+      //   // If the login fails, display an error message to the user
+      //   alert("Login failed. Please check your credentials and try again.");
+      // }
     } else {
-      alert("Please fill in all fields and complete the captcha.");
+      handleChange("error");
+      setAlertMsg("Por favor, preencha todos os campos e resolva o capcha para continuar");
     }
   };
 
   return (
-
+    <>
       <form onSubmit={handleSubmitLogin} className="Auth-form">
         <div className="Auth-form-content">
           <div className="form-group mt-3">
@@ -104,7 +142,18 @@ const Login = ({ container }: Props) => {
           </p>
         </div>
       </form>
-
+      <Fade
+        in={showAlert} //Write the needed condition here to make it appear
+        timeout={{ enter: 1000, exit: 1000 }} //Edit these two values to change the duration of transition when the element is getting appeared and disappeard
+        addEndListener={() => {
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 2000);
+        }}
+      >
+        {alert}
+      </Fade>
+    </>
   );
 };
 export default Login;

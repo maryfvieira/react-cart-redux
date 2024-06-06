@@ -1,5 +1,5 @@
 import { ErrorBase } from "@/error/errorBase";
-import axios, {AxiosHeaders, AxiosInstance, AxiosRequestConfig} from "axios";
+import axios, {AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
 import { HttpStatusCode } from "@/services/httpclient/httpStatusCode";
 import {} from "@config/appConfig";
 import { Headers } from "@/services/httpclient/axios/headers";
@@ -18,7 +18,7 @@ export default class ApiClientImpl implements ApiClient{
     readonly _baseUrl: string;
 
     constructor(){
-        this._baseUrl = appConfig.apiBaseUrl;
+        this._baseUrl = appConfig.apiBaseUrl ? appConfig.apiBaseUrl : "";
     }
 
     public async get(endpoint: string = "", headers: Headers, requestedData?: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
@@ -31,10 +31,10 @@ export default class ApiClientImpl implements ApiClient{
         try {
             
             if(utils.isNullOrUndefined(requestedData)){
-                axiosInstance = this.createClient(headers);
+                axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, requestedData.authToken);
+                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
                 params = requestedData.params;
             }
 
@@ -51,62 +51,46 @@ export default class ApiClientImpl implements ApiClient{
         }
         finally{
             response.statusResponse = responseAxios.status;
-            return responseAxios;
+            return response;
         }
     }
 
-    public async post(endpoint: string = "", headers: Headers, requestedData: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
+    public async post(endpoint: string = "", headers: Headers, requestedData?: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
         let response = {} as ApiResponse<any>;
-        let responseAxios : any;
-        let params = {} as any;
+        let axiosResponse = {} as AxiosResponse;
+        let data = {} as any;
         let axiosInstance = {} as AxiosInstance;
 
         try {
             
+
             if(utils.isNullOrUndefined(requestedData)){
-                axiosInstance = this.createClient(headers, null, baseURL);
+                axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, requestedData.authToken, baseURL);
-                params = requestedData.params;
+                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
+                data = requestedData?.data;
             }
            
-            if(!utils.isNullOrUndefined(params)){
-                responseAxios = await axiosInstance.post(endpoint, {params});
-            }else{
-                responseAxios = await axiosInstance.post(endpoint);
-            }
-            console.log("3a");
-            response.data = responseAxios.data;
+            
+            axiosResponse = await axiosInstance.post(endpoint, data);
+
+          
+            response.data = axiosResponse.data;
 
         } catch (error: any) {
-            console.log("3b");
+
             response.error = this.handleError(error);
         }
         finally{
-            console.log("4");
-            response.statusResponse = responseAxios.status;
-            return responseAxios;
+           
+            response.statusResponse = axiosResponse.status;
+           
+            return response;
         }
     }
 
-    // public async uploadFile(endpoint: string = "", headers: Headers, formData: ApiRequest<any>): Promise<ApiResponse<any>> {
-    //     try {
-    //         // let headers = new  Headers();
-    //         // headers.addItem("Content-Type", "multipart/form-data")
-
-    //         const axiosInstance = this.createClient(headers.getHeaders(), formData.authToken);
-    //         const response = await axiosInstance.post(endpoint, formData)
-    //         return response.data;
-    //     } catch (error) {
-    //         this.handleError(error);
-    //     }
-    //     finally{
-    //         response.statusResponse = responseAxios.status;
-    //     }
-    // }
-
-    public async put(endpoint: string, headers: Headers, requestedData: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
+    public async put(endpoint: string = "", headers: Headers, requestedData?: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
         let response = {} as ApiResponse<any>;
         let responseAxios : any;
         let params = {} as any;
@@ -115,10 +99,10 @@ export default class ApiClientImpl implements ApiClient{
         try {
             
             if(utils.isNullOrUndefined(requestedData)){
-                axiosInstance = this.createClient(headers);
+                axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, requestedData.authToken);
+                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
                 params = requestedData.params;
             }
 
@@ -135,11 +119,11 @@ export default class ApiClientImpl implements ApiClient{
         }
         finally{
             response.statusResponse = responseAxios.status;
-            return responseAxios;
+            return response;
         }
     }
 
-    public async delete(endpoint: string, headers: Headers, requestedData: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
+    public async delete(endpoint: string = "", headers: Headers, requestedData?: ApiRequest<any>, baseURL?: string): Promise<ApiResponse<any>> {
         let response = {} as ApiResponse<any>;
         let responseAxios : any;
         let params = {} as any;
@@ -151,7 +135,7 @@ export default class ApiClientImpl implements ApiClient{
                 axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, requestedData.authToken, baseURL);
+                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
                 params = requestedData.params;
             }
 
@@ -168,18 +152,20 @@ export default class ApiClientImpl implements ApiClient{
         }
         finally{
             response.statusResponse = responseAxios.status;
-            return responseAxios;
+            return response;
         }
     }
 
-    private createClient(headers: Headers, authToken?: string, baseURL?: string): AxiosInstance {
+    private createClient(headers: Headers, baseURL?: string, authToken?: string): AxiosInstance {
+
+        console.log("baseURL " + baseURL);
 
         if(utils.isNullOrUndefined(headers)){
             throw new Error("Headers is missing");
            
         }else{
             const config: AxiosRequestConfig = {
-                baseURL: utils.isEmptyStr(baseURL) ? this._baseUrl : baseURL,
+                baseURL: utils.isNullOrUndefined(baseURL) ? this._baseUrl : baseURL,
                 headers: headers.getHeaders()
             }
     
@@ -187,6 +173,7 @@ export default class ApiClientImpl implements ApiClient{
                 config.headers.Authorization = "Bearer " + authToken;
             }
 
+            console.log("axios create " + JSON.stringify(config));
             return axios.create(config);
         }
     }
@@ -195,21 +182,23 @@ export default class ApiClientImpl implements ApiClient{
         return HttpStatusCode[error as keyof typeof HttpStatusCode];
     }
 
-    private handleError(error: any): ErrorBase<any> {
+    private handleError(error: any): ErrorBase {
         console.log("handle error");
         console.log(error);
-        let errorResponse : ErrorBase<any>;
+        let errorResponse : ErrorBase;
 
-        let name  = HttpStatusCode[error.response.status as keyof typeof HttpStatusCode];
+        //let name  = HttpStatusCode[error.response.status as keyof typeof HttpStatusCode];
 
         if (!error.response) {
-            errorResponse = new ErrorBase(name);
+            errorResponse = new ErrorBase(error.response.status);
             //todo: create log
         } else {
-            errorResponse = new ErrorBase<HttpStatusCode>(name, error.message, null);
+            errorResponse = new ErrorBase(error.response.status, error.message, null);
             //todo: create log
         }
 
         return errorResponse;
     }
+
+ 
 }

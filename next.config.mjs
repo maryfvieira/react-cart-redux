@@ -21,6 +21,8 @@ export default async () => {
             API_BASE_URL : process.env.API_BASE_URL,
             SITE_KEY : process.env.SITE_KEY,
             SECRET_KEY: process.env.SECRET_KEY,
+            API_URL: process.env.API_URL,
+            GOOGLE_RECAPCHA_VERIFY_URL: process.env.GOOGLE_RECAPCHA_VERIFY_URL,
             MODE: process.env.MODE,
         },
         async headers() {

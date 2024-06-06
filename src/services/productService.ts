@@ -9,7 +9,7 @@ import TYPES from '@/services/httpclient/axios/types';
 import { ApiResponse } from '@/services/httpclient/model/apiResponse';
 
 @injectable()
-export class ProductsApi {
+export class ProductService {
 
    private _apiClient: ApiClient;
 
@@ -63,7 +63,7 @@ export class ProductsApi {
    }
 
    private getBaseURL(): string {
-      return null;
+      return "";
    }
    private getEndpoint(): string {
       return "product";
