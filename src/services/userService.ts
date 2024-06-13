@@ -28,7 +28,7 @@ export class UserService {
     password: string,
     captchaValue: string
   ): Promise<ApiResponse<any>> {
-    const googleApiURL: string = "http://localhost:3000/api/";
+    const googleApiURL: string = "http://localhost:3000/api/v1/";
 
     let apiRequest: ApiRequest<any>;
     let apiRespose: ApiResponse<any>;
@@ -47,7 +47,7 @@ export class UserService {
       googleApiURL
     );
 
-    console.log("response from userService =>" + JSON.stringify(apiRespose));
+    //console.log("response from userService =>" + JSON.stringify(apiRespose));
     return apiRespose;
   }
 

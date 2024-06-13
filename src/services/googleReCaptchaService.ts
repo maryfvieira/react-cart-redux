@@ -25,7 +25,7 @@ export class GoogleRecapchaService {
 
   public async verify(token: string): Promise<ApiResponse<any>> {
     const data = new URLSearchParams({
-      secret: "",//appConfig.SecretKeyToCaptcha,
+      secret: appConfig.SecretKeyToCaptcha,
       response: token,
     });
 

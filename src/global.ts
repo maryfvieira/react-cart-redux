@@ -8,6 +8,13 @@ export interface Product {
     product_image: string;
     product_qty: number;
   }
+  export interface ApiRoles{
+    id: number;
+    description: string;
+    url: string;
+    roles: string[];
+    methods: string[];
+  }
   
   export interface Stock {
     product:  Product;
@@ -49,3 +56,35 @@ export interface AuthPayload {
 	exp: number;
 	openIdSub?: string;
 }
+export enum T_UserRole {
+  Admin = "Admin",
+  User = "User",
+  Moderator = "Moderator",
+}
+export interface I_User {
+	id: string;
+	email: string;
+	phone: string;
+	password: string;
+	pin: string;
+	firstName: string;
+	lastName: string;
+	avatar?: string;
+	role: T_UserRole;
+	//status: T_UserStatus;
+	totpSecret?: string;
+	createdAt: Date;
+	updatedAt?: Date;
+	deletedAt?: Date;
+	lastLogin?: Date;
+	lastSeen?: Date;
+}
+
+export interface I_UserPublic extends Omit<I_User, 'password' | 'totpSecret'> {}
+
+export interface ApiResponse {
+	success: boolean;
+	message?: string;
+}
+
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

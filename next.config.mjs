@@ -24,6 +24,7 @@ export default async () => {
             API_URL: process.env.API_URL,
             GOOGLE_RECAPCHA_VERIFY_URL: process.env.GOOGLE_RECAPCHA_VERIFY_URL,
             MODE: process.env.MODE,
+            JWT_SECRET: process.env.JWT_SECRET
         },
         async headers() {
           return [

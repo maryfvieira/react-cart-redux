@@ -1,4 +1,4 @@
-import products from '../../app/api/product.json'
+import products from '../../../json/product.json';
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Product, Wishlist, CartItemState, CartState, Stock } from "@/global";
