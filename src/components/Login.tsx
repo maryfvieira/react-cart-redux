@@ -12,7 +12,9 @@ import Alert from "@mui/material/Alert";
 import ErrorIcon from "@mui/icons-material/Error";
 import { AlertTitle } from "@mui/material";
 import Fade from "@mui/material/Fade";
-import Box from "@mui/material/Box";
+ import { setUser } from '@/redux/slices/userSlice'; 
+import { UserState } from '@/global';
+import { useSelector, useDispatch, dispatch } from '@redux/store';
 
 function getLoginApi(container: Container): UserService {
   const apiClient = container.get<ApiClient>(TYPES.ApiClient);
@@ -22,6 +24,7 @@ function getLoginApi(container: Container): UserService {
 type Props = { container: Container };
 
 const Login = ({ container }: Props) => {
+
   const { capchaToken, recaptchaRef, handleRecaptcha } = useRecaptcha();
 
   const [username, setUsername] = useState("");
@@ -37,8 +40,15 @@ const Login = ({ container }: Props) => {
     setShowAlert(true);
   };
 
+  // const alert = (
+  //   <Alert severity={status} variant="standard" className="alert">
+  //     <AlertTitle>{status== "error"? "Erro":"Sucesso"}</AlertTitle>
+  //     {alertMsg}
+  //   </Alert>
+  // );
+
   const alert = (
-    <Alert severity={status} variant="standard" className="alert">
+    <Alert variant="standard" className="alert">
       <AlertTitle>{status== "error"? "Erro":"Sucesso"}</AlertTitle>
       {alertMsg}
     </Alert>
@@ -72,6 +82,10 @@ const Login = ({ container }: Props) => {
         // }
         return;
       } else {
+
+        //const dispatch = useDispatch();
+        //dispatch(setUser(result.data))
+
         handleChange("success");
         setAlertMsg("");
       }

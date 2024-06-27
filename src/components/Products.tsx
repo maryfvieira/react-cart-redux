@@ -23,7 +23,7 @@ type Props = { container: Container};
 
 const Products = ({ container }: Props) => {
 
-    const [data, setData] = useState<Product[]>([])
+    const [data, setData] = useState<Product[] | undefined>([])
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const Products = ({ container }: Props) => {
                 isLoading ? (<Loading />) : (
 
                     <div><h3>Produtos</h3><p className="text-muted">Confira nossa lista de produtos</p><div className="row mt-3">
-                        {data.length > 0 ? data.map(product => (
+                        {(data!= undefined && data.length > 0) ? data.map(product => (
                             <div className="col-md-3" key={product.id}>
                                 <CardProduct product={product} />
                             </div>

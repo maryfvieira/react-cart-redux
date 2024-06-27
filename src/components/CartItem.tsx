@@ -4,17 +4,17 @@ import React from 'react'
 import Button from '@mui/material/Button';
 import {Delete, Favorite} from '@mui/icons-material';
 import { useSelector, useDispatch } from '@redux/store';
-import { addItemQty, addWishlist, removeItemQty, removeFromCart } from '@/redux/slices/cartSlice';
+import { addItemQty, addWishlist, removeItemQty, removeFromCart } from '@/redux/slices/cartSlice'; 
 import { Product, CartItemState, CartState } from '@/global';
 
 type Props = { cartItem: CartItemState;};
 
 const CartItem = ({ cartItem }: Props) => {
 
-    let cart : CartState;
+    let cart = {} as CartState | undefined;
     cart = useSelector((state) => state.cart);
 
-    let cartItemAmount = cart.cartItems.find(item=> item.product.id == cartItem.product.id)?.cartItemAmount;
+    let cartItemAmount = cart?.cartItems.find(item=> item.product.id == cartItem.product.id)?.cartItemAmount;
 
     const dispatch = useDispatch();
 
@@ -35,7 +35,6 @@ const CartItem = ({ cartItem }: Props) => {
         // Dispatch the 'getResources' action to fetch data
         dispatch(addItemQty(productId));
       };
-
 
     return (
         <>

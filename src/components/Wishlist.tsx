@@ -6,7 +6,7 @@ import { useSelector } from '@redux/store';
 import { CartState } from '@/global';
 
 const Wishlist = () => {
-    let cart : CartState;
+    let cart  = {} as CartState | undefined;
     cart = useSelector((state) => state.cart);
 
     return (
@@ -15,7 +15,7 @@ const Wishlist = () => {
             <p className="text-muted">All Your Favorite Products</p>
             <div className="row mt-3">
                 {
-                    (cart.wishlist.products != null && cart.wishlist.products.length > 0) ? cart.wishlist.products.map(item =>
+                    (cart!= undefined && cart.wishlist.products != null && cart.wishlist.products.length > 0) ? cart.wishlist.products.map(item =>
                      { 
                         console.log(item.product_name);
                         return (                      

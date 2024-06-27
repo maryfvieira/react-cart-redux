@@ -34,8 +34,8 @@ export default class ApiClientImpl implements ApiClient{
                 axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
-                params = requestedData.params;
+                axiosInstance = this.createClient(headers, baseURL, requestedData?.authToken);
+                params = requestedData?.params;
             }
 
             if(!utils.isNullOrUndefined(params)){
@@ -68,7 +68,7 @@ export default class ApiClientImpl implements ApiClient{
                 axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
+                axiosInstance = this.createClient(headers, baseURL, requestedData?.authToken);
                 data = requestedData?.data;
             }
            
@@ -102,8 +102,8 @@ export default class ApiClientImpl implements ApiClient{
                 axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
-                params = requestedData.params;
+                axiosInstance = this.createClient(headers, baseURL, requestedData?.authToken);
+                params = requestedData?.params;
             }
 
             if(!utils.isNullOrUndefined(params)){
@@ -135,8 +135,8 @@ export default class ApiClientImpl implements ApiClient{
                 axiosInstance = this.createClient(headers, baseURL);
                 
             }else{
-                axiosInstance = this.createClient(headers, baseURL, requestedData.authToken);
-                params = requestedData.params;
+                axiosInstance = this.createClient(headers, baseURL, requestedData?.authToken);
+                params = requestedData?.params;
             }
 
             if(!utils.isNullOrUndefined(params)){
@@ -169,7 +169,7 @@ export default class ApiClientImpl implements ApiClient{
                 headers: headers.getHeaders()
             }
     
-            if (!utils.isNullOrUndefined(authToken)) {
+            if (!utils.isNullOrUndefined(authToken) && config.headers!= undefined) {
                 config.headers.Authorization = "Bearer " + authToken;
             }
 

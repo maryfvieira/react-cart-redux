@@ -22,6 +22,7 @@ const initialState: CartState = {
   amount: 0,
   total: 0,
   isLoading: true,
+  cartUpdateDate: undefined
 };
 
 const cartSlice = createSlice({
@@ -33,6 +34,7 @@ const cartSlice = createSlice({
       state.products = [];
       state.amount = 0;
       state.total = 0;
+      state.cartUpdateDate = undefined
     },
     addToCart: (state, action: PayloadAction<CartItemState>) => {
       //exibir somente produtos que não estão no carrinho
@@ -68,12 +70,14 @@ const cartSlice = createSlice({
 
       state.amount = amount + cartItem.cartItemAmount;
       state.total = total + cartItem.cartItemTotal;
+      state.cartUpdateDate = new Date();
     },
     addWishlist: (state, action) => {
       const productId = action.payload;
       let cartItem = state.cartItems.find(item => item.product.id == productId);
       if (cartItem !== undefined) {
         state.wishlist.products.push(cartItem.product);
+        state.cartUpdateDate = new Date();
       }
     },
     removeFromCart: (state, action) => {
@@ -91,6 +95,7 @@ const cartSlice = createSlice({
 
         state.total = state.total - cartItemToRemove.cartItemTotal;
         state.amount -= cartItemToRemove.cartItemAmount;
+        state.cartUpdateDate = new Date();
 
         //let filProduct = cartItemToRemove.product;
         //state.products.push(filProduct);
@@ -115,6 +120,7 @@ const cartSlice = createSlice({
         state.cartItems.push(cartItem);
         state.amount += 1;
         state.total = total;
+        state.cartUpdateDate = new Date();
       }
     },
     removeItemQty: (state, action) => {
@@ -139,6 +145,7 @@ const cartSlice = createSlice({
 
         state.amount -= 1;
         state.total = total;
+        state.cartUpdateDate = new Date();
       }
     },
   }

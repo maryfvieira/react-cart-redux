@@ -16,16 +16,16 @@ import { useSelector, useDispatch } from "../redux/store";
 import { CartState } from '@/global';
 
 const Cart = () => {
-  let cart : CartState;
+  let cart = {} as CartState | undefined;
   cart = useSelector((state) => state.cart);
   
   return (
     <div className="row mt-5">
       <div className="col-lg-8 col-md-12">
         <div className="custom-card">
-          <h4>Itens do carrinho: ( {cart.cartItems.length} )</h4>
+          <h4>Itens do carrinho: ( {cart?.cartItems.length} )</h4>
           <hr className="my-3" />
-          {cart.cartItems.map((cartItem) => (
+          {cart?.cartItems.map((cartItem) => (
             <CartItem cartItem={cartItem} key={Math.random()}/>
           ))}
         </div>
@@ -36,7 +36,7 @@ const Cart = () => {
           <hr className="my-3" />
           <div className="d-flex justify-content-between">
             <p className="text-muted">Total de itens</p>
-            <p className="text-muted">{cart.amount}</p>
+            <p className="text-muted">{cart?.amount}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p className="text-muted">Entrega</p>
@@ -45,7 +45,7 @@ const Cart = () => {
           <hr className="my-2" />
           <div className="d-flex justify-content-between align-items-center mb-4">
             <strong>Total</strong>
-            <strong>${cart.total.toFixed(2)}</strong>
+            <strong>${cart?.total.toFixed(2)}</strong>
           </div>
 
           <form target="pagseguro" method="post" action="https://sandbox.pagseguro.uol.com.br/v2/checkout/payment.html?code=EBA5CD410909084DD4A3CF869D2B8AA5">

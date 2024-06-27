@@ -5,7 +5,7 @@ import "reflect-metadata";
 import ApiClient from '@/services/httpclient/axios/apiClient';
 import TYPES from '@/services/httpclient/axios/types';
 import { Container } from "inversify";
-import { GoogleRecapchaService } from "@/services/GoogleReCaptcha";
+import { GoogleRecapchaService } from "@/services/googleReCaptchaService";
 import container from '@/di/ioc.config';
 
 interface CaptchaRes {

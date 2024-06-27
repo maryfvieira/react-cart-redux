@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getJwt, verifyJwtToken } from './utils/auth';
-import { ApiResponse, ApiRoles } from './global';
+import { getJwt, isNotExpiredToken } from './utils/auth';
+import { ApiResponse, ApiRoles, AuthPayload } from './global';
 import apiRolesJson from '../json/apiRoles.json';
 
 
@@ -35,8 +35,12 @@ export async function middleware(request: NextRequest) {
 	apiRoles = apiRolesJson;
 	const apiRole = apiRoles.find(p=> p.url == request.nextUrl.pathname);
 
-	const jwtPayload = await getJwt();
-
+	let token: string | undefined;
+	if(request.cookies.has("token")){
+		token = request.cookies.get("token")?.value;
+	}
+	let jwtPayload = {} as AuthPayload | null;
+	
 	if (authRoutes.some(pattern => matchesWildcard(request.nextUrl.pathname, pattern)) || apiRole != null) {
 		//const token = request.cookies.get('token');
 		
@@ -52,12 +56,17 @@ export async function middleware(request: NextRequest) {
 		// 	}
 		// }
 		// If no token exists, redirect to login
-		if (jwtPayload == null) {
+		if (token == undefined) {
 			NextResponse.redirect(LOGIN);
+		}else{
+			if(!isNotExpiredToken(token)){
+				request.cookies.delete("token");
+				NextResponse.redirect(LOGIN);
+			}
 		}
 		try {
 			// Decode and verify JWT cookie
-
+			jwtPayload = await getJwt(token);
 			
 			// If you have an admin role and path, secure it here
 			if (request.nextUrl.pathname.startsWith('/admin')) {

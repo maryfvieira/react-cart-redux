@@ -48,9 +48,11 @@ export class GoogleRecapchaService {
     response.statusResponse = googleResponse.statusResponse;
 
     if (!response.success) {
+      const errorResponse = response["error-codes"] as unknown as string;
+
       return {
         statusResponse: response.statusResponse,
-        error: new ErrorBase(response.statusResponse, response["error-codes"]),
+        error: new ErrorBase(response.statusResponse, errorResponse),
       };
     } else {
       return {

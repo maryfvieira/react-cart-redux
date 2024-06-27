@@ -1,9 +1,9 @@
 
 import { ApiResponse } from "@/services/httpclient/model/apiResponse";
-import { logout } from "@/utils/auth";
+//import { logout } from "@/utils/auth";
 
 export async function GET(request: Request) {
-  await logout();
+  //await logout();
   
   const response: ApiResponse<any> = {
 		statusResponse:200

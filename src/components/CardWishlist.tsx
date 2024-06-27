@@ -8,8 +8,8 @@ import { Product, CartItemState, CartState } from "@/global";
 type Props = { wishItem: Product };
 
 const CardWishlist = ({ wishItem }: Props) => {
-  let cart: CartState;
-  cart = useSelector((state) => state.cart);
+  // let cart = {} as CartState | undefined;
+  // cart = useSelector((state) => state.cart);
 
   const dispatch = useDispatch();
 
