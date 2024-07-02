@@ -11,11 +11,8 @@ import { ApiResponse } from '@/services/httpclient/model/apiResponse';
 @injectable()
 export class ProductService {
 
+   @inject(TYPES.ApiClient)
    private _apiClient: ApiClient;
-
-   constructor(@inject(TYPES.ApiClient) apiClient: ApiClient) {
-      this._apiClient = apiClient;
-   }
 
    public async getAll(): Promise<ApiResponse<Product[]>> {
       let apiRespose: ApiResponse<Product[]>;
@@ -47,7 +44,6 @@ export class ProductService {
       });
 
       return apiRespose;
-
    }
 
    private getJsonHeader(): Headers {
@@ -68,6 +64,4 @@ export class ProductService {
    private getEndpoint(): string {
       return "product";
    }
-
-
 }

@@ -12,16 +12,16 @@ import { I_User, I_UserPublic, T_UserRole } from "@/global";
 import authConfig from "@config/authConfig";
 import { getJwtSecretKey } from "@/utils/auth";
 import { NextResponse, NextRequest } from 'next/server';
+import { NextApiRequest } from "next";
 
 export interface I_ApiUserLoginRequest {
   userName: string;
   password: string;
 }
 
-export async function POST(httpRequest: Request) {
-  const body = (await httpRequest.json()) as I_ApiUserLoginRequest;
-
-
+export async function POST(httpRequest: NextApiRequest) {
+  const body = (await httpRequest.body) as I_ApiUserLoginRequest;
+  
   const { userName, password } = Object.fromEntries(
     Object.entries(body).map(([key, value]) => [key, value?.trim()])
   ) as I_ApiUserLoginRequest;

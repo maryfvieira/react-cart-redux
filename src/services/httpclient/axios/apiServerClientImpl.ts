@@ -29,7 +29,7 @@ let failedRequests: FailedRequests[] = [];
 let isTokenRefreshing = false;
 
 @injectable()
-export default class ApiClientImpl implements ApiClient {
+export default class ApiServerClientImpl implements ApiClient {
   readonly _baseUrl: string;
 
   constructor() {
@@ -207,23 +207,6 @@ export default class ApiClientImpl implements ApiClient {
       console.log("axios create " + JSON.stringify(config));
       const axiosInstance = axios.create(config);
 
-      // Request interceptor
-      axiosInstance.interceptors.request.use(
-        (config) => {
-          // Modify the request config here (add headers, authentication tokens)
-          //const accessToken = JSON.parse(localStorage.getItem("token"));
-
-          // If token is present, add it to request's Authorization Header
-          if (accessToken) {
-            if (config.headers) config.headers.token = accessToken;
-          }
-          return config;
-        },
-        (error) => {
-          // Handle request errors here
-          return Promise.reject(error);
-        }
-      );
       // Response interceptor
 
       axiosInstance.interceptors.response.use(
@@ -231,11 +214,11 @@ export default class ApiClientImpl implements ApiClient {
         async (error: AxiosError) => {
           const status = error.response?.status;
           const originalRequestConfig = error.config!;
-
+      
           if (status !== 401) {
             return Promise.reject(error);
           }
-
+      
           if (isTokenRefreshing) {
             return new Promise((resolve, reject) => {
               failedRequests.push({
@@ -246,27 +229,24 @@ export default class ApiClientImpl implements ApiClient {
               });
             });
           }
-
+      
           isTokenRefreshing = true;
-
+      
           try {
             const response = await axiosInstance.post("/access-token", {
-              refreshToken: JSON.parse(
-                localStorage.getItem("refreshToken") ?? ""
-              ),
+              refreshToken: JSON.parse(localStorage.getItem("refreshToken") ?? ""),
             });
-            const { accessToken = null, refreshToken = null } =
-              response.data ?? {};
-
+            const { accessToken = null, refreshToken = null } = response.data ?? {};
+      
             if (!accessToken || !refreshToken) {
               throw new Error(
                 "Something went wrong while refreshing your access token"
               );
             }
-
+      
             localStorage.setItem("accessToken", JSON.stringify(accessToken));
             localStorage.setItem("refreshToken", JSON.stringify(refreshToken));
-
+      
             failedRequests.forEach(({ resolve, reject, config }) => {
               axiosInstance(config)
                 .then((response) => resolve(response))
@@ -282,7 +262,7 @@ export default class ApiClientImpl implements ApiClient {
             failedRequests = [];
             isTokenRefreshing = false;
           }
-
+      
           return axiosInstance(originalRequestConfig);
         }
       );

@@ -33,6 +33,6 @@ export async function POST(httpRequest:Request){
 }
 
 function getGoogleService(container: Container): GoogleRecapchaService {
-  const googleService = container.get<ApiClient>(TYPES.ApiClient);
+  const googleService = container.get<ApiClient>(TYPES.ApiServerClient);
   return new GoogleRecapchaService(googleService);
 }

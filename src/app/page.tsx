@@ -8,8 +8,6 @@ import Products from "@/components/Products";
 import Wishlist from "@/components/Wishlist";
 import Footer from "@/components/Footer";
 import '../app/index.css'
-import container from '@/di/ioc.config';
-
 
 // Define the Home component
 const Home: React.FC = () => {
@@ -19,7 +17,7 @@ const Home: React.FC = () => {
     <main>
       <Navbar /> 
       <div className="container">
-        <Products container={container}/>
+        <Products/>
         <Wishlist />
         <Cart />
       </div>
@@ -27,6 +25,4 @@ const Home: React.FC = () => {
     </main>
   );
 };
-
-// Export the Home component as the default export
 export default Home;

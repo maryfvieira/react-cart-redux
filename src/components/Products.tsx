@@ -4,42 +4,21 @@ import React, { Component, useState } from 'react'
 
 import CardProduct from '@components/CardProduct';
 
-import { useRef, useEffect } from 'react';
-import { ProductService } from '@/services/productService';
-import { Headers } from '@/services/httpclient/axios/headers';
+import { useEffect } from 'react';
 import { Product } from '@/global';
 import Loading from "@components/Loading";
-import 'reflect-metadata';
-import ApiClient from '@/services/httpclient/axios/apiClient';
-import TYPES from '@/services/httpclient/axios/types';
-import { Container } from 'inversify';
+import {getProductService} from "@/hooks/container";
 
-function getProductApi(container: Container): ProductService {
-    const apiClient = container.get<ApiClient>(TYPES.ApiClient);
-    return new ProductService(apiClient);
-}
-
-type Props = { container: Container};
-
-const Products = ({ container }: Props) => {
+const Products = () => {
 
     const [data, setData] = useState<Product[] | undefined>([])
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         const GetProducts = async () => {
-            // try{
-            //const productManager = await createProductManager();
-
-            const products = await getProductApi(container).getAll();
+            const products = await getProductService().getAll();
             console.log("products " + products)
             setData(products.data);
-
-            // }catch (error: any){
-            //     console.log(error);
-            // }finally{
-            //     setLoading(false)
-            // }
         }
         GetProducts()
             .catch(console.error)

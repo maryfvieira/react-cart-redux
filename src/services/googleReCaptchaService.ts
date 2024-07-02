@@ -17,7 +17,7 @@ export class GoogleRecapchaService {
   private headers: Headers;
   private baseURL: string;
 
-  constructor(@inject(TYPES.ApiClient) apiClient: ApiClient) {
+  constructor(@inject(TYPES.ApiServerClient) apiClient: ApiClient) {
     this._apiClient = apiClient;
     this.headers = new Headers();
     this.baseURL = appConfig.googleRecapchaVerifyUrl;
