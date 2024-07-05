@@ -12,15 +12,14 @@ import { I_User, I_UserPublic, T_UserRole } from "@/global";
 import authConfig from "@config/authConfig";
 import { getJwtSecretKey } from "@/utils/auth";
 import { NextResponse, NextRequest } from 'next/server';
-import { NextApiRequest } from "next";
 
 export interface I_ApiUserLoginRequest {
   userName: string;
   password: string;
 }
 
-export async function POST(httpRequest: NextApiRequest) {
-  const body = (await httpRequest.body) as I_ApiUserLoginRequest;
+export async function POST(httpRequest: NextRequest) {
+  const body = (await httpRequest.json()) as I_ApiUserLoginRequest;
   
   const { userName, password } = Object.fromEntries(
     Object.entries(body).map(([key, value]) => [key, value?.trim()])
@@ -40,7 +39,7 @@ export async function POST(httpRequest: NextApiRequest) {
       statusResponse: 400,
       error: new ErrorBase(400, "Parameters missing"),
     };
-    return Response.json(apiRespose);
+    return NextResponse.json(apiRespose);
   }else{
     //todo: create a db call to verify user credentials or call an other api to perfom the validation
     const user = getMockedUser(userName);
@@ -50,7 +49,7 @@ export async function POST(httpRequest: NextApiRequest) {
       data: {user}
     };
   
-    return Response.json(apiRespose);
+    return NextResponse.json(apiRespose);
   }
 }
 

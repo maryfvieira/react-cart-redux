@@ -85,6 +85,7 @@ export interface I_User {
 
 export interface UserState {
   data: I_UserPublic;
+  token: string | null;
   isLoading: boolean;
   isLogged: boolean;
 }

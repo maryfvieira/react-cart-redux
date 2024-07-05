@@ -15,6 +15,7 @@ import Fade from "@mui/material/Fade";
  import { setUser } from '@/redux/slices/userSlice'; 
 import { UserState } from '@/global';
 import { useSelector, useDispatch, dispatch } from '@redux/store';
+import {generateJwtToken} from "@/utils/auth";
 
 function getLoginApi(container: Container): UserService {
   const apiClient = container.get<ApiClient>(TYPES.ApiClient);
@@ -25,6 +26,7 @@ type Props = { container: Container };
 
 const Login = ({ container }: Props) => {
 
+  const dispatch = useDispatch();
   const { capchaToken, recaptchaRef, handleRecaptcha } = useRecaptcha();
 
   const [username, setUsername] = useState("");
@@ -65,7 +67,7 @@ const Login = ({ container }: Props) => {
 
       recaptchaRef.current?.reset();
 
-      console.log("erro=>" + JSON.stringify(result));
+      console.log("erro ***=>" + JSON.stringify(result));
       if (result.data.error != null) {
         console.log("erro" + result.error);
        
@@ -82,9 +84,11 @@ const Login = ({ container }: Props) => {
         // }
         return;
       } else {
-
-        //const dispatch = useDispatch();
-        //dispatch(setUser(result.data))
+        
+        const userData = result.data;
+        const token = await generateJwtToken(userData);
+        dispatch(setUser({token: token, data: userData}))
+        
 
         handleChange("success");
         setAlertMsg("");

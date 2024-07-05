@@ -58,6 +58,11 @@ export class UserService {
       apiRespose.statusResponse = googleResponse.statusResponse;
       apiRespose.error = googleResponse.error;
     } else {
+      
+      apiRequest = {
+        data: { userName: user, password: password },
+      };
+      
       let userValidationResponse = await this._apiClient.post(
         this.userApiEndpoint,
         this.headers,
@@ -70,10 +75,10 @@ export class UserService {
         apiRespose.error = userValidationResponse.error;
       } else {
         apiRespose.statusResponse = 200;
-        const userData = userValidationResponse.data as I_UserPublic;
+        const userData = userValidationResponse.data.data.user as I_UserPublic;
 
         // let jwtToken: string;
-        const token = await generateJwtToken(userData);
+        //onst token = await generateJwtToken(userData);
 
         //persist token
         // const cookieStore = cookies()
@@ -81,8 +86,8 @@ export class UserService {
         // const testCookie = cookieStore.set("token", token);
 
         //cleand and persist data in redux store
-        dispatch(clearUser());
-        dispatch(setUser(userData));
+        //dispatch(clearUser());
+        //dispatch(setUser(userData));
 
 
         // jwtToken = await new SignJWT({

@@ -18,6 +18,7 @@ import { ApiRequest } from "@/services/httpclient/model/apiRequest";
 import { ApiResponse } from "@/services/httpclient/model/apiResponse";
 import utils from "@/utils/validation";
 
+
 interface FailedRequests {
   resolve: (value: AxiosResponse) => void;
   reject: (value: AxiosError) => void;
@@ -208,10 +209,13 @@ export default class ApiClientImpl implements ApiClient {
       const axiosInstance = axios.create(config);
 
       // Request interceptor
+      /*
       axiosInstance.interceptors.request.use(
         (config) => {
           // Modify the request config here (add headers, authentication tokens)
-          //const accessToken = JSON.parse(localStorage.getItem("token"));
+          let user = {} as UserState | undefined;
+          user = useSelector((state) => state.user);
+          const accessToken = ""; //todo: ajustar
 
           // If token is present, add it to request's Authorization Header
           if (accessToken) {
@@ -285,7 +289,7 @@ export default class ApiClientImpl implements ApiClient {
 
           return axiosInstance(originalRequestConfig);
         }
-      );
+      );*/
 
       return axiosInstance;
     }

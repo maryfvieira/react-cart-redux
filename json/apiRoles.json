@@ -1,15 +1,13 @@
-[
-    {
-        "id": 1,
-        "description": "show all products",
-        "url": "/api/v1/product",
-        "roles": [
-            "Moderator",
-            "Admin",
-            "User"
-        ],
-        "methods": [
-            "GET"
-        ]
-    }
-]
+[{
+    "id": 1,
+    "description": "show all products",
+    "url": "/api/v1/product",
+    "roles": [
+        "Moderator",
+        "Admin",
+        "User"
+    ],
+    "methods": [
+        "POST"
+    ]
+}]

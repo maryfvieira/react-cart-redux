@@ -1,11 +1,14 @@
 import { I_UserPublic, T_UserRole, UserState } from "@/global";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { setCookie, deleteCookie } from 'cookies-next';
+import authConfig from "@config/authConfig";
 
 const initialState: UserState = {
   data: {} as I_UserPublic,
   isLoading: false,
   isLogged: false,
+  token: ""
 };
 
 const userSlice = createSlice({
@@ -17,15 +20,21 @@ const userSlice = createSlice({
         state.data={} as I_UserPublic
         state.isLoading = false;
         state.isLogged = false;
+        state.token = "";
+        deleteCookie(authConfig.jwtTokenName);
       },
-      setUser: (state, action: PayloadAction<I_UserPublic>) => {
+      setUser: (state, action) => {
         state.isLoading = true;
         
         if(action.payload!=null){
-            state.data=action.payload;
+          const {token, data} = action.payload;
+            state.data=data;
+            state.token = token;
             state.isLogged = true;
+            setCookie(authConfig.jwtTokenName, token);
         }
         state.isLoading = false;
+        
       },
       setRole: (state, action: PayloadAction<T_UserRole>) =>{
         state.isLoading = true;
@@ -51,6 +60,10 @@ const userSlice = createSlice({
         state.isLoading = true;
         state.data.updatedAt=action.payload
         state.isLoading = false;
+      },
+      refreshToken:(state,action:PayloadAction<string>) => {
+        state.token = action.payload;
+        setCookie(authConfig.jwtTokenName, action.payload);
       }
     }
 });

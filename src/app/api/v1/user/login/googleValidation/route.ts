@@ -29,10 +29,11 @@ export async function POST(httpRequest:Request){
   const result = await getGoogleService(container).verify(request.token);
 
   console.log(JSON.stringify(result));
+
   return Response.json(result);
 }
 
 function getGoogleService(container: Container): GoogleRecapchaService {
-  const googleService = container.get<ApiClient>(TYPES.ApiServerClient);
+  const googleService = container.get<ApiClient>(TYPES.ApiClient);
   return new GoogleRecapchaService(googleService);
 }

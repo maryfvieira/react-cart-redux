@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getJwt, isNotExpiredToken } from './utils/auth';
 import { ApiResponse, ApiRoles, AuthPayload } from './global';
 import apiRolesJson from '../json/apiRoles.json';
-
+import authConfig from "@config/authConfig";
 
 // Add whatever paths you want to PROTECT here
 const authRoutes = ['/app/*', '/account/*', '/admin/*'];
@@ -25,6 +25,7 @@ function matchesWildcard(path: string, pattern: string): boolean {
 // }
 
 export async function middleware(request: NextRequest) {
+	
 	// Shortcut for our login path redirect
 	// Note: you must use absolute URLs for middleware redirects
 	const LOGIN = `${process.env.NEXT_PUBLIC_BASE_URL}/login?redirect=${
@@ -33,15 +34,17 @@ export async function middleware(request: NextRequest) {
 	
 	let apiRoles: ApiRoles[];
 	apiRoles = apiRolesJson;
+	
 	const apiRole = apiRoles.find(p=> p.url == request.nextUrl.pathname);
-
+	let methods = apiRole?.methods;
+	const hasMethod = methods?.some((t) => t === request.method);
 	let token: string | undefined;
-	if(request.cookies.has("token")){
-		token = request.cookies.get("token")?.value;
+	if(request.cookies.has(authConfig.jwtTokenName)){
+		token = request.cookies.get(authConfig.jwtTokenName)?.value;
 	}
 	let jwtPayload = {} as AuthPayload | null;
 	
-	if (authRoutes.some(pattern => matchesWildcard(request.nextUrl.pathname, pattern)) || apiRole != null) {
+	if (authRoutes.some(pattern => matchesWildcard(request.nextUrl.pathname, pattern)) || (apiRole != null && methods?.some((t) => t === request.method))) {
 		//const token = request.cookies.get('token');
 		
 		// For API routes, we want to return unauthorized instead of
@@ -56,11 +59,11 @@ export async function middleware(request: NextRequest) {
 		// 	}
 		// }
 		// If no token exists, redirect to login
-		if (token == undefined) {
+		if (token == undefined || token == "") {
 			NextResponse.redirect(LOGIN);
 		}else{
 			if(!isNotExpiredToken(token)){
-				request.cookies.delete("token");
+				request.cookies.delete(authConfig.jwtTokenName);
 				NextResponse.redirect(LOGIN);
 			}
 		}
@@ -95,7 +98,7 @@ export async function middleware(request: NextRequest) {
 	// Redirect login to app if already logged in
 	if (request.nextUrl.pathname === '/login') {
 
-		if(jwtPayload== null){
+		if(token == undefined){
 			NextResponse.redirect(LOGIN);
 		}else{
 			redirectToApp = true;
