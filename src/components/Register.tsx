@@ -66,7 +66,7 @@ const Register = ({ container }: Props) => {
               <br />
               <ReCAPTCHA
                 ref={recaptchaRef}
-                sitekey={process.env.SITE_KEY}
+                sitekey={process.env.SITE_KEY || ""}
                 onChange={handleRecaptcha}
               /> <br />
               <button
