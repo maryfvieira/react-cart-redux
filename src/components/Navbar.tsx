@@ -1,8 +1,12 @@
-"use client";
+ "use client";
 
 import { UserState } from "@/global";
 import { useSelector } from "@redux/store";
 import React from "react";
+import {getCurrentUser} from "@/lib/session";
+
+import ButtonLogout from "@/components/ButtonLogout"
+import Link from "next/link";
 
 function UserGreeting(user) {
   return <label>Bem vindo de volta ${user}</label>;
@@ -12,21 +16,24 @@ function GuestGreeting() {
   return <label>Olá visitante, seja bem vindo</label>;
 }
 
-function greetingFunc(){
-  let user = {} as UserState | undefined;
-  user = useSelector((state) => state.user);
+// function greetingFunc(){
+//   let user = {} as UserState | undefined;
+//   user = useSelector((state) => state.user);
 
-  if (user?.isLogged) {
-    return UserGreeting(user.data.firstName);
-  }else{
-    return GuestGreeting();
-  }
-}
+//   if (user?.isLogged) {
+//     return UserGreeting(user.data.firstName);
+//   }else{
+//     return GuestGreeting();
+//   }
+// }
 
 //todo: remover usuario do reducer assim que o cookie for removido
-const Navbar = () => {
-  let user = {} as UserState | undefined;
-  user = useSelector((state) => state.user);
+export default async function Navbar(){
+
+  const user = await getCurrentUser();
+
+  // let user = {} as UserState | undefined;
+  // user = useSelector((state) => state.user);
 
   return (
     <>
@@ -40,14 +47,13 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item">
-              {user?.isLogged ? (
+              {user ? (
                 <a className="nav-link" href="/logout">
-                  Logout
+                   Olá, {user.firstName}. Bem vindo(a)!
+                  	<ButtonLogout />
                 </a>
               ) : (
-                <a className="nav-link" href="/login">
-                  Login
-                </a>
+                 <Link className="nav-link" href="/signin">Logar</Link>
               )}
             </li>
           </ul>
@@ -58,4 +64,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+

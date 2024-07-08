@@ -17,9 +17,9 @@ const Home: React.FC = () => {
     <main>
       <Navbar /> 
       <div className="container">
-        <Products/>
+        {/* <Products/>
         <Wishlist />
-        <Cart />
+        <Cart /> */}
       </div>
       <Footer />
     </main>

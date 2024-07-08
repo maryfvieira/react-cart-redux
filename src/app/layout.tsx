@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from '@redux/provider';
 //import "@/lib/di/reflect-metadata";  
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
