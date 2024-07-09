@@ -24,7 +24,7 @@ const LoginRegister = ({ container }: Props) => {
               <span className="link-primary" onClick={changeAuthMode}>
                 Sign Up
               </span>
-            </div></div><Login container={container} /></>)
+            </div></div><Login /></>)
         } else {
           return (<><div className="Auth-form-content"><h3 className="Auth-form-title">Sign Up</h3>
           <div className="text-center">Already registered?{" "}

@@ -1,4 +1,4 @@
-'use client'
+//'use client'
 
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from '@redux/store';
@@ -7,16 +7,24 @@ import Footer from "@components/Footer";
 //import '../app/index.css'
 import container from '@/di/ioc.config';
 import LoginRegister from '@components/LoginRegister';
+import Login from '@components/Login';
+import { getCurrentUser } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
 // Define the Login page
-const LoginPage: React.FC = () => {
+const LoginPage = async () => {
 
-  // JSX for the main component
+  const user = await getCurrentUser();
+
+  if (user) {
+      redirect('/')
+  }
+  
   return (
     <main>
       <Navbar /> 
       <div className="container">
-        <LoginRegister container={container}/>
+        <Login/>
       </div>
       <Footer />
     </main>

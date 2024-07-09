@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { setCookie, deleteCookie } from 'cookies-next';
 import authConfig from "@config/authConfig";
+import { PURGE } from "redux-persist";
+
 
 const initialState: UserState = {
   data: {} as I_UserPublic,
@@ -22,6 +24,7 @@ const userSlice = createSlice({
         state.isLogged = false;
         state.token = "";
         deleteCookie(authConfig.jwtTokenName);
+        state.isLoading = false;
       },
       setUser: (state, action) => {
         state.isLoading = true;
@@ -66,6 +69,12 @@ const userSlice = createSlice({
         setCookie(authConfig.jwtTokenName, action.payload);
       }
     }
+    ,
+  // extraReducers: (builder) => {
+  //   builder.addCase(PURGE, (state) => {
+  //     storage.removeItem("persist:root");
+  //   });
+  // },
 });
 
 export const {

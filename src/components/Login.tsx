@@ -2,31 +2,14 @@
 import React, { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import useRecaptcha from "@/hooks/useRecaptcha";
-
 import "reflect-metadata";
-import ApiClient from "@/services/httpclient/axios/apiClient";
-import TYPES from "@/services/httpclient/axios/types";
-import { Container } from "inversify";
-import { UserService } from "@/services/userService";
 import Alert from "@mui/material/Alert";
-import ErrorIcon from "@mui/icons-material/Error";
 import { AlertTitle } from "@mui/material";
 import Fade from "@mui/material/Fade";
- import { setUser } from '@/redux/slices/userSlice'; 
-import { UserState } from '@/global';
-import { useSelector, useDispatch, dispatch } from '@redux/store';
-import {generateJwtToken} from "@/utils/auth";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-function getLoginApi(container: Container): UserService {
-  const apiClient = container.get<ApiClient>(TYPES.ApiClient);
-  return new UserService(apiClient);
-}
-
-type Props = { container: Container };
-
-const Login = ({ container }: Props) => {
-
-  const dispatch = useDispatch();
+const Login = () => {
   const { capchaToken, recaptchaRef, handleRecaptcha } = useRecaptcha();
 
   const [username, setUsername] = useState("");
@@ -36,6 +19,7 @@ const Login = ({ container }: Props) => {
   const [alertMsg, setAlertMsg] = useState("Login realizado com sucesso");
   const [showAlert, setShowAlert] = useState(false);
   const [alertVisibility, setAlertVisibility] = useState(false);
+  const router = useRouter();
 
   const handleChange = (status) => {
     setStatus(status);
@@ -51,7 +35,7 @@ const Login = ({ container }: Props) => {
 
   const alert = (
     <Alert variant="standard" className="alert">
-      <AlertTitle>{status== "error"? "Erro":"Sucesso"}</AlertTitle>
+      <AlertTitle>{status == "error" ? "Erro" : "Sucesso"}</AlertTitle>
       {alertMsg}
     </Alert>
   );
@@ -59,59 +43,39 @@ const Login = ({ container }: Props) => {
   const handleSubmitLogin = async (e) => {
     e.preventDefault();
     if (capchaToken && username && password) {
-      const result = await getLoginApi(container).login(
+      const result = await signIn("credentials", {
         username,
         password,
-        capchaToken
-      );
+        capchaToken,
+        redirect: false,
+      });
 
       recaptchaRef.current?.reset();
 
       console.log("erro ***=>" + JSON.stringify(result));
-      if (result.data.error != null) {
+      if (result?.error) {
         console.log("erro" + result.error);
-       
-        if (result.data.error._message) 
-          setAlertMsg(result.data.error._message);
-        else 
-          setAlertMsg("Ocorreu um erro inesperado");
+
+        if (result.error) setAlertMsg(result.error);
+        else setAlertMsg("Ocorreu um erro inesperado");
 
         handleChange("error");
 
         handleRecaptcha("");
-        // if (recaptchaRef.current) {
-        //   recaptchaRef.current.reset();
-        // }
+
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+
         return;
       } else {
-        
-        const userData = result.data;
-        const token = await generateJwtToken(userData);
-        dispatch(setUser({token: token, data: userData}))
-        
-
-        handleChange("success");
-        setAlertMsg("");
+        router.replace("/");
       }
-
-      // Reset captcha after submission
-      //recaptchaRef.current?.reset();
-
-      // If the login is successful, perform post-login logic
-      // if (result.data.data.success) {
-      //   // Example post-login logic:
-      //   // - Store user token or session data
-      //   // - Redirect to a protected page
-      //   // - Update user state in the application
-      //   console.log("Login successful");
-      //   // ...
-      // } else {
-      //   // If the login fails, display an error message to the user
-      //   alert("Login failed. Please check your credentials and try again.");
-      // }
     } else {
       handleChange("error");
-      setAlertMsg("Por favor, preencha todos os campos e resolva o capcha para continuar");
+      setAlertMsg(
+        "Por favor, preencha todos os campos e resolva o capcha para continuar"
+      );
     }
   };
 

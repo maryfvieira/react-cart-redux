@@ -1,3 +1,5 @@
+import { DefaultUser } from "next-auth";
+
 export interface Product {
   id: number;
   product_name: string;
@@ -98,3 +100,18 @@ export interface ApiResponse {
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+export interface UserSession {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  role: T_UserRole;
+}
+
+export interface AuthUser extends DefaultUser {
+  role: T_UserRole;
+  firstName: string;
+  lastName: string;
+}
