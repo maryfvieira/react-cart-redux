@@ -21,4 +21,7 @@ export default {
     get googleRecapchaVerifyUrl(): string {
         return process.env.GOOGLE_RECAPCHA_VERIFY_URL || "";
     },
+    get getNextAuthSecret(): string {
+        return process.env.NEXTAUTH_SECRET || "";
+    },
 }

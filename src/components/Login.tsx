@@ -26,16 +26,10 @@ const Login = () => {
     setShowAlert(true);
   };
 
-  // const alert = (
-  //   <Alert severity={status} variant="standard" className="alert">
-  //     <AlertTitle>{status== "error"? "Erro":"Sucesso"}</AlertTitle>
-  //     {alertMsg}
-  //   </Alert>
-  // );
 
   const alert = (
-    <Alert variant="standard" className="alert">
-      <AlertTitle>{status == "error" ? "Erro" : "Sucesso"}</AlertTitle>
+    <Alert severity="error" className="alert">
+      <AlertTitle>{"Erro"}</AlertTitle>
       {alertMsg}
     </Alert>
   );
@@ -52,12 +46,10 @@ const Login = () => {
 
       recaptchaRef.current?.reset();
 
-      console.log("erro ***=>" + JSON.stringify(result));
-      if (result?.error) {
-        console.log("erro" + result.error);
+      if (result?.error !=  null) {
+        console.log("erro" + JSON.stringify(result));
 
-        if (result.error) setAlertMsg(result.error);
-        else setAlertMsg("Ocorreu um erro inesperado");
+       setAlertMsg("Não foi possível realizar o login, tente novamente");
 
         handleChange("error");
 
