@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-//import Accordion from '@material-ui/core/Accordion';
+import { toZonedTime } from 'date-fns-tz'
+
 import {
   Accordion,
   AccordionSummary,
@@ -9,16 +10,19 @@ import {
   Typography,
 } from "@mui/material";
 
-
 import { ExpandMore } from "@mui/icons-material";
 import CartItem from "./CartItem";
 import { useSelector, useDispatch } from "../redux/store";
 import { CartState } from '@/global';
+ import { clearCart } from '@/redux/slices/cartSlice';
+
 
 const Cart = () => {
+   const dispatch = useDispatch();
+
   let cart = {} as CartState | undefined;
   cart = useSelector((state) => state.cart);
-  
+
   return (
     <div className="row mt-5">
       <div className="col-lg-8 col-md-12">

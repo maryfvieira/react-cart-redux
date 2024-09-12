@@ -6,13 +6,16 @@ import NextAuth, {
 } from "next-auth";
 import NextAuthResult from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-//import "reflect-metadata";
+import "reflect-metadata";
 import { getUserService } from "@/hooks/container";
 import { ApiResponse } from "@/services/httpclient/model/apiResponse";
-import { I_UserPublic, T_UserRole, UserSession } from "@/global";
+import { AuthUser, I_UserPublic, UserSession } from "@/global";
 import { randomBytes, randomUUID } from "crypto";
 import Email from "next-auth/providers/email";
 import appConfig from "@config/appConfig";
+import * as config from "@/constants";
+import { JWT } from "next-auth/jwt";
+import { TokenProvider } from "@/services/jwt/TokenProvider";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -38,50 +41,72 @@ export const nextAuthOptions: NextAuthOptions = {
             credentials.capchaToken
           );
 
-          let user = {} as UserSession;
+          let userAuth = {} as AuthUser;
+          userAuth.user = {} as UserSession;
 
           if (!apiResponse.error && apiResponse.data) {
-            user.id = apiResponse.data.id;
-            user.avatar = apiResponse.data.avatar;
-            user.firstName = apiResponse.data.firstName;
-            user.lastName = apiResponse.data.lastName;
-            user.role = apiResponse.data.role;
-            user.email = apiResponse.data.email;
+            userAuth.user.id = apiResponse.data.id;
+            userAuth.user.avatar = apiResponse.data.avatar;
+            userAuth.user.firstName = apiResponse.data.firstName;
+            userAuth.user.lastName = apiResponse.data.lastName;
+            userAuth.user.role = apiResponse.data.role;
+            userAuth.user.email = apiResponse.data.email;
 
-            
-            return user;
+            //****todo: bloco deveria estar num Identity service para gerar tokens(chamando aqui via api)
+
+            const tokenProvider = new TokenProvider(userAuth.user);
+            const access_token = tokenProvider.generateAccessToken();
+            const refresh_token = tokenProvider.generateRefreshToken();
+
+            //****** */
+
+            userAuth.access_token = access_token;
+            userAuth.refresh_token = refresh_token;
+            userAuth.expires_at = Date.now() + config.jwtAccessTokenExpiration;
+
+            return userAuth as any;
+            // return {
+            //   user: {
+            //     id: apiResponse.data.id,
+            //     email: apiResponse.data.email,
+            //     firstName: apiResponse.data.firstName,
+            //     lastName: apiResponse.data.lastName,
+            //     avatar: apiResponse.data.avatar,
+            //     role: apiResponse.data.role,
+            //   },
+            // };
           }
         }
         return null;
-        // return {
-        // 	error: apiResponse.error?._message,
-        // };
-        //let user = {} as UserSession;
 
-        // user =
-        // {
-        // 	id: "1",
-        // 	email: "adm@adm.com",
-        // 	firstName: "Agnaldo",
-        // 	lastName: "Petrucio",
-        // 	avatar:"",
-        // 	role: T_UserRole.User
+        // return {
+        //   error: apiResponse.error?._message,
+        // };
+        // let user = {} as any;
+
+        // user = {
+        //   id: "1",
+        //   email: "adm@adm.com",
+        //   firstName: "admin",
+        //   lastName: "",
+        //   avatar: null,
+        //   role: "admin",
         // };
 
         // return user;
       },
     }),
   ],
-
   secret: appConfig.getNextAuthSecret,
   jwt: {
     secret: appConfig.getNextAuthSecret,
-    maxAge: 5 * 60 * 1000,
+    maxAge: config.jwtAccessTokenExpiration / 1000,
   },
-  // session: {
-  //   strategy: "jwt",
-	// 	maxAge:  180,
-  // },
+  session: {
+    // Seconds: how long until an idle session expires and is no longer valid.
+    strategy: "jwt",
+    maxAge: config.jwtAccessTokenExpiration / 1000,
+  },
   // session: {
   // 	strategy: "jwt",
   // 	// Seconds: how long until an idle session expires and is no longer valid.
@@ -94,9 +119,9 @@ export const nextAuthOptions: NextAuthOptions = {
 
   // },
   pages: {
-    signIn: "/login",
-    signOut: "/logout",
-    //newUser: "/signup",
+    signIn: "/signin",
+    signOut: "/signout",
+    // newUser: "/signup",
     // error: "/error",
   },
   callbacks: {
@@ -111,44 +136,44 @@ export const nextAuthOptions: NextAuthOptions = {
     //      //return '/unauthorized'
     //   }
     // },
-    async jwt({ token, account, user }) {
-       if (user) 
-        token.user = user as UserSession;
+    async jwt({ token, account, user, trigger, session }) {
+      if (account && user) {
+        let userAuth = user as unknown as AuthUser;
 
-      //  if (token.tokenExpiration < Date.now()) {
+        let jwt = {
+          user: userAuth.user,
+          access_token: userAuth.access_token,
+          expires_at: userAuth.expires_at,
+          refresh_token: userAuth.refresh_token,
+        } as JWT;
 
-      //   return {...token, ...user};
-      //  }
-       return token;
-     
-     
+        return jwt;
+      }
 
-      // if (account) {
-      //   return {
-      //     access_token: account.access_token,
-      //     expires_at: account.expires_at,
-      //     refresh_token: account.refresh_token,
-      //     user: user,
-      //   }
-      // }else if (Date.now() < token.expires_at * 1000) {
-      //   // Subsequent logins, if the `access_token` is still valid, return the JWT
-      //   return token
-      // }else {
-      //   // Subsequent logins, if the `access_token` has expired, try to refresh it
-      //   if (!token.refresh_token) 
-      //     throw new Error("Missing refresh token");
-      //   }
+      if (trigger == "update") {
+        const tokenProvider = new TokenProvider(token.user);
+        const newAccessToken = tokenProvider.refreshAccessToken(
+          token.refresh_token,
+          token.access_token
+        );
+        if (newAccessToken != null) {
+          token.access_token = newAccessToken;
+          token.expires_at =
+            tokenProvider.getAccessTokenPayload(newAccessToken).exp;
+        }
+        // return token;
+      }
 
+      if (token != null && token.expires_at > Date.now()) {
+        return token;
+      }
+
+      return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user = token.user as UserSession;
-        // session.user.id = token.user.id;
-        // session.user.avatar = token.avatar;
-        // session.user.email = token.email;
-        // session.user.firstName = token.firstName;
-        // session.user.lastName = token.lastName;
-        // session.user.role = token.role;
+        session.access_token = token.access_token;
       }
 
       return session;

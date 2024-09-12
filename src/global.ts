@@ -35,13 +35,13 @@ export interface CartItemState {
 }
 
 export interface CartState {
-  products: Product[];
+  //products: Product[];
+  createdDate: Date|undefined;
   wishlist: Wishlist;
   cartItems: CartItemState[];
   amount: number;
   total: number;
   isLoading: boolean;
-  cartUpdateDate:Date|undefined
 }
 
 export interface GoogleResponse {
@@ -110,8 +110,9 @@ export interface UserSession {
   role: T_UserRole;
 }
 
-export interface AuthUser extends DefaultUser {
-  role: T_UserRole;
-  firstName: string;
-  lastName: string;
+export interface AuthUser{
+  user: UserSession;
+  access_token?: string;
+  expires_at?: number;
+  refresh_token?: string;
 }

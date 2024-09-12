@@ -8,12 +8,12 @@ import TYPES from "@/services/httpclient/axios/types";
 import { ApiResponse } from "@/services/httpclient/model/apiResponse";
 import { ApiRequest } from "@/services/httpclient/model/apiRequest";
 import { SignJWT } from "jose";
-import authConfig from "@config/authConfig";
 import { generateJwtToken, getJwtSecretKey } from "@/utils/auth";
-
+import jwt from "jsonwebtoken"
 import { clearUser, setUser } from "@/redux/slices/userSlice";
 import { UserState } from "@/global";
 import { useSelector, useDispatch, dispatch } from "@redux/store";
+import * as authConfig from "@/constants";
 
 
 //const googleApiEndpoint: string = "user/login";
@@ -112,6 +112,32 @@ export class UserService {
   }
 
   public async updateExpirationDate(userId: string) {}
+
+  public generateAccessToken = function(){
+    return jwt.sign(
+          {
+          _id:this._id,
+          email:this.email,
+          username:this.username,
+          fullName:this.fullName
+          },
+          authConfig.jwtAccessTokenSecret,
+          {
+              expiresIn: authConfig.jwtAccessTokenExpiration
+          }
+      )
+  }
+  public generateRefreshToken = function(){
+      return jwt.sign(
+          {
+          _id:this._id,
+          },
+          authConfig.jwtRefreshTokenSecret,
+          {
+              expiresIn: authConfig.jwtRefreshTokenExpiration
+          }
+      )
+  } 
 
   private setJsonHeader() {
     this.headers.addItem("Content-Type", "application/json");

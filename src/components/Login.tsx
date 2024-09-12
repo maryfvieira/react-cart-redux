@@ -8,6 +8,9 @@ import { AlertTitle } from "@mui/material";
 import Fade from "@mui/material/Fade";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import * as yup from "yup";
+import { TokenProvider } from "@/services/jwt/TokenProvider";
+import authConfig from "@config/authConfig";
 
 const Login = () => {
   const { capchaToken, recaptchaRef, handleRecaptcha } = useRecaptcha();
@@ -26,7 +29,6 @@ const Login = () => {
     setShowAlert(true);
   };
 
-
   const alert = (
     <Alert severity="error" className="alert">
       <AlertTitle>{"Erro"}</AlertTitle>
@@ -41,15 +43,16 @@ const Login = () => {
         username,
         password,
         capchaToken,
+        callbackUrl: "/",
         redirect: false,
       });
 
       recaptchaRef.current?.reset();
 
-      if (result?.error !=  null) {
+      if (result?.error != null) {
         console.log("erro" + JSON.stringify(result));
 
-       setAlertMsg("Não foi possível realizar o login, tente novamente");
+        setAlertMsg("Não foi possível realizar o login, tente novamente");
 
         handleChange("error");
 

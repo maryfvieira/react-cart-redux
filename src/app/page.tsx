@@ -8,6 +8,7 @@ import Products from "@/components/Products";
 import Wishlist from "@/components/Wishlist";
 import Footer from "@/components/Footer";
 import '../app/index.css'
+import SessionManager from '@components/SessionManager';
 
 // Define the Home component
 const Home: React.FC = () => {
@@ -16,6 +17,7 @@ const Home: React.FC = () => {
   return (
     <main>
       <Navbar /> 
+      {/* <SessionManager /> */}
       <div className="container">
         <Products/>
         <Wishlist />

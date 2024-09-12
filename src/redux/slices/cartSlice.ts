@@ -2,6 +2,9 @@ import products from '../../../json/product.json';
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { Product, Wishlist, CartItemState, CartState, Stock } from "@/global";
+import { toZonedTime } from 'date-fns-tz'
+
+const pt_BR = "America/Sao_Paulo";
 
 let allProducts: Product[];
 allProducts = products;
@@ -16,13 +19,13 @@ const emptyWishlist = (): Wishlist => ({
 const initProducts = [...products]
 
 const initialState: CartState = {
-  products: [],
+  //products: [],
   wishlist: { products: [] } as Wishlist,
   cartItems: cartItems,
   amount: 0,
   total: 0,
-  isLoading: true,
-  cartUpdateDate: undefined
+  createdDate: undefined,
+  isLoading: true
 };
 
 const cartSlice = createSlice({
@@ -30,18 +33,24 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     clearCart: state => {
-      state.cartItems = [];
-      state.products = [];
+      //state.products = [];
+      state.wishlist = { products: [] } as Wishlist;
+
+      let cartItems: CartItemState[];
+      cartItems = [];
+      state.cartItems = cartItems;
+      
       state.amount = 0;
       state.total = 0;
-      state.cartUpdateDate = undefined
+      state.createdDate = undefined;
+      state.isLoading = false;
     },
     addToCart: (state, action: PayloadAction<CartItemState>) => {
       //exibir somente produtos que não estão no carrinho
       //state.products = state.products.filter(item => item.id !== action.payload.product.id);
 
       //remover o produto da lista de desejos
-      state.wishlist.products = state.wishlist.products.filter(item => item.id !== action.payload.product.id);
+      //state.wishlist.products = state.wishlist.products.filter(item => item.id !== action.payload.product.id);
 
       let amount = state.amount;
       let total = state.total;
@@ -50,10 +59,15 @@ const cartSlice = createSlice({
       cartItem = state.cartItems.find(
         item => item.product.id === action.payload.product.id
       );
+
+      if(state.createdDate === undefined){
+        const now = toZonedTime(new Date(), pt_BR);
+        state.createdDate = now;
+      }
+
       if (cartItem === undefined) {
-
         cartItem = action.payload;
-
+       
       } else {
         amount = amount - cartItem.cartItemAmount;
         total = total - cartItem.cartItemTotal;
@@ -70,18 +84,19 @@ const cartSlice = createSlice({
 
       state.amount = amount + cartItem.cartItemAmount;
       state.total = total + cartItem.cartItemTotal;
-      state.cartUpdateDate = new Date();
+
     },
     addWishlist: (state, action) => {
       const productId = action.payload;
       let cartItem = state.cartItems.find(item => item.product.id == productId);
       if (cartItem !== undefined) {
+        if(state.createdDate === undefined){
+          state.createdDate = new Date();
+        }
         state.wishlist.products.push(cartItem.product);
-        state.cartUpdateDate = new Date();
       }
     },
     removeFromCart: (state, action) => {
-      console.log("entrou");
       const productId = action.payload;
 
       const cartItemToRemove = state.cartItems.find(
@@ -95,11 +110,7 @@ const cartSlice = createSlice({
 
         state.total = state.total - cartItemToRemove.cartItemTotal;
         state.amount -= cartItemToRemove.cartItemAmount;
-        state.cartUpdateDate = new Date();
-
-        //let filProduct = cartItemToRemove.product;
-        //state.products.push(filProduct);
-
+        
       }
     },
     addItemQty: (state, action) => {
@@ -120,7 +131,6 @@ const cartSlice = createSlice({
         state.cartItems.push(cartItem);
         state.amount += 1;
         state.total = total;
-        state.cartUpdateDate = new Date();
       }
     },
     removeItemQty: (state, action) => {
@@ -145,7 +155,6 @@ const cartSlice = createSlice({
 
         state.amount -= 1;
         state.total = total;
-        state.cartUpdateDate = new Date();
       }
     },
   }
