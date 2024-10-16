@@ -1,12 +1,20 @@
 
+import { getProductService } from '@/hooks/container';
 import { getAuthSession } from '@/lib/auth'
-import React from "react";
+import { signOut } from 'next-auth/react';
+import React, { useEffect } from "react";
 
 
 const Navbar = async () => {
+
   const session = await getAuthSession();
 
-
+  // useEffect(() => {
+  //   if(session==undefined){
+  //     signOut();
+  //   }
+  // })
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light py-4">

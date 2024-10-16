@@ -6,7 +6,7 @@ import { toZonedTime } from 'date-fns-tz'
 
 const TZ = "America/Sao_Paulo";
 
-function currentTimeInSeconds(): number {
+ function currentTimeInSeconds(): number {
   const now = toZonedTime(new Date(), TZ);
 
   return Math.floor(now.getTime() / 1000);
@@ -50,14 +50,14 @@ export class TokenProvider {
     });
   }
 
-  public getAccessTokenPayload(jwtAccessToken): any{
-	return jwt.verify(
+  public getAccessTokenPayload(jwtAccessToken): any {
+    return jwt.verify(
 		jwtAccessToken,
 		config.jwtAccessTokenSecret
 	  );
   }
 
-  public getRefreshTokenPayload(jwtRefreshToken): any{
+  public getRefreshTokenPayload(jwtRefreshToken): any {
 	return jwt.verify(
 		jwtRefreshToken,
 		config.jwtRefreshTokenSecret
@@ -69,7 +69,7 @@ export class TokenProvider {
     jwtAccessToken: string
   ): string | null {
     
-	const accessTokenExpirationTime = toZonedTime(new Date(this.getAccessTokenPayload(jwtAccessToken).exp * 1000), TZ);
+	// const accessTokenExpirationTime = toZonedTime(new Date(this.getAccessTokenPayload(jwtAccessToken).exp * 1000), TZ);
   const refreshTokenExpirationTime = toZonedTime(new Date(this.getRefreshTokenPayload(jwtRefreshToken).exp * 1000), TZ);
 
     const now = toZonedTime(new Date(), TZ);

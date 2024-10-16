@@ -1,43 +1,25 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { toZonedTime } from 'date-fns-tz'
+import { signOut, useSession } from "next-auth/react";
+import { redirect } from 'next/navigation';
 
 const SessionManager = () => {
   const { data: session, update } = useSession();
-  const pt_BR = "America/Sao_Paulo";
+  //const [isLoading, setIsLoading] = useState(true)
+  const now =  Date.now() / 1000;
 
-  function isNearToExpireSession() {
-    if (session?.expires != null) {
-      const expiresAt = toZonedTime(new Date(session?.expires), pt_BR);
-      const now = toZonedTime(new Date(), pt_BR)
-      const nowPlusTwoMinutes = toZonedTime(new Date(now.getTime() + 1000 * 60 * 3), pt_BR);  
-
-      //verifica se sessao vai expirar em ate2 min
-      if (now < expiresAt && nowPlusTwoMinutes > expiresAt) {
-        updateSession();
-      }
-    }
-  }
-
-  async function updateSession() {
-    await update();
-  }
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       update(); // extend client session
-//       // TODO request token refresh from server
-//     }, 1000 * 60 * 60)
-//     return () => clearInterval(interval)
-//   }, [update]); 
-//   return (
-//     <></>
-//   )
+  // if(session==undefined)
+  //   redirect('/logout')
+ 
   useEffect(() => {
-    isNearToExpireSession();
-  });
+    if(session!= undefined && session.expires_at < now){
+      signOut()
+    }
+    //setIsLoading(false)
+
+    
+  },[]);
 
   return <></>;
 };

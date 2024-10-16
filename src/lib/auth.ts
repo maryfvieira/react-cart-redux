@@ -16,6 +16,9 @@ import appConfig from "@config/appConfig";
 import * as config from "@/constants";
 import { JWT } from "next-auth/jwt";
 import { TokenProvider } from "@/services/jwt/TokenProvider";
+import { toZonedTime } from "date-fns-tz";
+import { JsonWebTokenError } from "jsonwebtoken";
+const TZ = "America/Sao_Paulo";
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -60,9 +63,15 @@ export const nextAuthOptions: NextAuthOptions = {
 
             //****** */
 
+            const accessTokenPayload =
+              tokenProvider.getAccessTokenPayload(access_token);
+            const refreshTokenPayload =
+              tokenProvider.getRefreshTokenPayload(refresh_token);
+
             userAuth.access_token = access_token;
             userAuth.refresh_token = refresh_token;
-            userAuth.expires_at = Date.now() + config.jwtAccessTokenExpiration;
+            userAuth.expires_at = accessTokenPayload.exp;
+            userAuth.refresh_expire_at = refreshTokenPayload.exp;
 
             return userAuth as any;
             // return {
@@ -98,14 +107,14 @@ export const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   secret: appConfig.getNextAuthSecret,
-  jwt: {
-    secret: appConfig.getNextAuthSecret,
-    maxAge: config.jwtAccessTokenExpiration / 1000,
-  },
+  // jwt: {
+  //   secret: appConfig.getNextAuthSecret,
+  //   maxAge: config.jwtAccessTokenExpiration / 1000,
+  // },
   session: {
     // Seconds: how long until an idle session expires and is no longer valid.
     strategy: "jwt",
-    maxAge: config.jwtAccessTokenExpiration / 1000,
+    maxAge: config.sessionExpiration,
   },
   // session: {
   // 	strategy: "jwt",
@@ -144,42 +153,83 @@ export const nextAuthOptions: NextAuthOptions = {
           user: userAuth.user,
           access_token: userAuth.access_token,
           expires_at: userAuth.expires_at,
+          refresh_expire_at: userAuth.refresh_expire_at,
           refresh_token: userAuth.refresh_token,
         } as JWT;
 
         return jwt;
       }
 
-      if (trigger == "update") {
+      // if (trigger == "update") {
+      //   const tokenProvider = new TokenProvider(token.user);
+      //   const newAccessToken = tokenProvider.refreshAccessToken(
+      //     token.refresh_token,
+      //     token.access_token
+      //   );
+      //   if (newAccessToken != null) {
+      //     token.access_token = newAccessToken;
+      //     token.exp = token.expires_at =
+      //       tokenProvider.getAccessTokenPayload(newAccessToken).exp;
+      //   }
+      //   // return token;
+      // }
+
+      if (token != null) {
         const tokenProvider = new TokenProvider(token.user);
+
+        const now = Date.now() / 1000;
+        const now_ = currentTimeInSeconds();
+
+        if (token.expires_at > now) {
+          let payload = tokenProvider.getAccessTokenPayload(token.access_token);
+          token.expires_at = token.exp = payload.exp;
+
+          return token;
+        }
+
+        if (token.refresh_expire_at < now) {
+
+          let jwt = {
+            expires_at: token.refresh_expire_at,
+            access_token: token.access_token,
+            user: token.user,
+          } as JWT;
+          
+          return jwt;
+        }
+
         const newAccessToken = tokenProvider.refreshAccessToken(
           token.refresh_token,
           token.access_token
         );
+
         if (newAccessToken != null) {
           token.access_token = newAccessToken;
-          token.expires_at =
-            tokenProvider.getAccessTokenPayload(newAccessToken).exp;
+          let payload = tokenProvider.getAccessTokenPayload(token.access_token);
+          token.expires_at = token.exp = payload.exp;
         }
-        // return token;
-      }
-
-      if (token != null && token.expires_at > Date.now()) {
-        return token;
       }
 
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user = token.user as UserSession;
+        session.user = token.user == undefined ? {} as UserSession : token.user as UserSession;
         session.access_token = token.access_token;
+        session.expires_at = token.expires_at;
+
       }
 
       return session;
     },
   },
 };
+
+export function currentTimeInSeconds(): number {
+  const now = toZonedTime(new Date(), TZ);
+
+  return Math.floor(now.getTime() / 1000);
+}
 
 export const getAuthSession = () => getServerSession(nextAuthOptions);
 
